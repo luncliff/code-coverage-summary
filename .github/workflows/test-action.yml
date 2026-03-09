@@ -12,16 +12,19 @@ permissions:
 
 jobs:
   unit-tests:
-    name: Unit Tests
+    name: Unit Tests (Node.js ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['20', '24']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
       - name: Install dependencies
@@ -33,18 +36,22 @@ jobs:
       - name: Build dist
         run: npm run build
 
-  test-linux:
-    name: Test Action on Linux
-    runs-on: ubuntu-latest
+  test-action:
+    name: Test Action (${{ matrix.os }}, Node.js ${{ matrix.node-version }})
+    runs-on: ${{ matrix.os }}
     needs: unit-tests
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: ['20', '24']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
       - name: Install dependencies
@@ -74,58 +81,3 @@ jobs:
           output: 'console'
           thresholds: '50 75'
 
-  test-windows:
-    name: Test Action on Windows
-    runs-on: windows-latest
-    needs: unit-tests
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build dist
-        run: npm run build
-
-      - name: Test Action — text output
-        uses: ./
-        with:
-          filename: 'src/coverage.cobertura.xml'
-          format: 'text'
-          output: 'console'
-          thresholds: '60 80'
-
-  test-macos:
-    name: Test Action on macOS
-    runs-on: macos-latest
-    needs: unit-tests
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build dist
-        run: npm run build
-
-      - name: Test Action — text output
-        uses: ./
-        with:
-          filename: 'src/coverage.cobertura.xml'
-          format: 'text'
-          output: 'console'
-          thresholds: '60 80'

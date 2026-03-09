@@ -3,5 +3,8 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: ['**/__tests__/**/*.test.ts'],
-  collectCoverage: false
+  collectCoverage: false,
+  coverageDirectory: 'coverage',
+  coverageReporters: ['lcov', 'text'],
+  collectCoverageFrom: ['src/**/*.ts', '!src/CodeCoverageSummary/**']
 }

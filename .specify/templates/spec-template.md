@@ -113,3 +113,13 @@
 - **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
 - **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
 - **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
+
+## Constitution Check *(mandatory)*
+
+Reference: `.specify/memory/constitution.md`
+
+- Which core principles are affected by this feature?
+- Does this change preserve GitHub Action interface parity (inputs/outputs/behavior)?
+- Does this remain cross-platform and Node-only (no Docker/.NET requirement)?
+- Does this preserve upstream artifacts / avoid unnecessary deletions?
+- Are security and quality gates (tests + static analysis) satisfied?

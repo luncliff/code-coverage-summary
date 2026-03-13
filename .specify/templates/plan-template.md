@@ -31,7 +31,15 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+Reference: `.specify/memory/constitution.md`
+
+- Action interface parity preserved (inputs/outputs/behavior)
+- Cross-platform support confirmed (Linux/Windows/macOS) with Node-only runtime
+- Upstream artifacts preserved (no unnecessary deletions; legacy clearly labeled)
+- Security posture maintained (dependency hygiene; pinned actions in CI where applicable)
+- Quality gates defined (tests updated/added; static analysis stays healthy)
+
+If any gate is violated, record it under **Complexity Tracking** with justification.
 
 ## Project Structure
 

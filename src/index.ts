@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import * as fs from 'fs'
 import { createEmptySummary, parseCoverageFile, CoverageSummary } from './coverage-parser'
-import { discoverCoverageFiles, parseCoveragePatterns } from './file-discovery'
+import { discoverCoverageFiles } from './file-discovery'
 import {
   parseThresholds,
   generateBadgeUrl,
@@ -48,9 +48,7 @@ export async function run(): Promise<void> {
   try {
     const { badge, failBelowMin, format, hideBranchRate, hideComplexity, indicators, output, thresholdsInput, patterns } = parseInputs()
 
-    const globber = await glob.create(patterns.join('\n'))
     // Resolve glob patterns — comma-separated list supported
-    const patterns = parseCoveragePatterns(filename)
     const files = await discoverCoverageFiles(patterns)
 
     if (files.length === 0) {

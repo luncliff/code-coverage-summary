@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
-import * as glob from '@actions/glob'
 import * as fs from 'fs'
 import { createEmptySummary, parseCoverageFile, CoverageSummary } from './coverage-parser'
+import { discoverCoverageFiles, parseCoveragePatterns } from './file-discovery'
 import {
   parseThresholds,
   generateBadgeUrl,
@@ -44,12 +44,14 @@ export function parseInputs(): ParsedInputs {
   return { filename, badge, failBelowMin, format, hideBranchRate, hideComplexity, indicators, output, thresholdsInput, patterns }
 }
 
-async function run(): Promise<void> {
+export async function run(): Promise<void> {
   try {
     const { badge, failBelowMin, format, hideBranchRate, hideComplexity, indicators, output, thresholdsInput, patterns } = parseInputs()
 
     const globber = await glob.create(patterns.join('\n'))
-    const files = await globber.glob()
+    // Resolve glob patterns — comma-separated list supported
+    const patterns = parseCoveragePatterns(filename)
+    const files = await discoverCoverageFiles(patterns)
 
     if (files.length === 0) {
       core.setFailed('Error: No files found matching glob pattern.')

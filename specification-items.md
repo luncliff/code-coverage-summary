@@ -8,38 +8,6 @@ This document breaks down the derived requirements from [project-requirements.md
 
 ---
 
-## B) File discovery and diagnostic logging
-
-### SI-B1 — Working directory and pattern expansion
-
-**Statement**: The action shall expand `filename` patterns relative to the workspace working directory.
-
-**Traceability**: FR-4
-
-**Acceptance criteria**:
-- Running the action from repository root expands patterns relative to that directory.
-
-### SI-B2 — No matches error
-
-**Statement**: If no files match the provided patterns, the action shall fail and log a specific error message.
-
-**Traceability**: FR-5
-
-**Acceptance criteria**:
-- The action logs exactly: `Error: No files found matching glob pattern.`
-- The action fails the step.
-
-### SI-B3 — Per-file trace log
-
-**Statement**: For each matched coverage file, the action shall log its path.
-
-**Traceability**: FR-6
-
-**Acceptance criteria**:
-- For each matched file, one log line is emitted with the prefix `Coverage File: ` followed by the file path.
-
----
-
 ## C) Cobertura parsing
 
 ### SI-C1 — Required root attributes

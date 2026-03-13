@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<coverage line-rate="0.5" branch-rate="0" lines-covered="1" lines-valid="2" branches-covered="0" branches-valid="0">
+  <packages>
+    <package name="Unit" line-rate="0.5" branch-rate="0" complexity="1" />
+  </packages>
+</coverage>

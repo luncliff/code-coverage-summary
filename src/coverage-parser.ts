@@ -83,12 +83,12 @@ export function parseCoverageFile(
   const branchRateStr = coverage['@_branch-rate']
   const branchesCoveredStr = coverage['@_branches-covered']
   const branchesValidStr = coverage['@_branches-valid']
-  const hasRootBranchMetrics =
+  const rootBranchMetricsPresent =
     branchRateStr !== undefined ||
     branchesCoveredStr !== undefined ||
     branchesValidStr !== undefined
 
-  if (hasRootBranchMetrics) {
+  if (rootBranchMetricsPresent) {
     summary.branchMetricsPresent = true
     summary.branchRate += safeFloat(branchRateStr) ?? 0
     summary.branchesCovered += safeInt(branchesCoveredStr) ?? 0

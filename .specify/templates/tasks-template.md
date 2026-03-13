@@ -155,6 +155,9 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] TXXX Performance optimization across all stories
 - [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
 - [ ] TXXX Security hardening
+- [ ] TXXX Verify action interface parity (inputs/defaults/output format) against baseline fixtures
+- [ ] TXXX Verify cross-platform behavior (path handling, line endings) with OS-matrix CI if applicable
+- [ ] TXXX Confirm static analysis health (e.g., SonarCloud) and address new issues
 - [ ] TXXX Run quickstart.md validation
 
 ---

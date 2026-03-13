@@ -64,8 +64,10 @@ export async function run(): Promise<void> {
       try {
         summary = parseCoverageFile(file, summary)
       } catch (err) {
+        const relativePath = path.relative(process.cwd(), file)
+        const displayPath = relativePath || path.basename(file)
         core.setFailed(
-          `Parsing Error: ${(err as Error).message} - ${path.basename(file)}`
+          `Parsing Error: ${(err as Error).message} - ${displayPath}`
         )
         return
       }

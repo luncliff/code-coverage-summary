@@ -22,7 +22,7 @@ npm test; npm run lint
 TypeScript 5.x, targeting Node 20: Follow standard conventions
 
 ## Recent Changes
-- 003-cobertura-xml-parsing: Added TypeScript 5.9, targeting Node 20 + `@actions/core ^1.11.1`, `@actions/glob ^0.5.0`, `fast-xml-parser ^5.4.2`
+- 003-cobertura-xml-parsing: Added TypeScript 5.x, targeting Node 20 + `@actions/core ^1.11.1`, `@actions/glob ^0.5.0`, `fast-xml-parser ^5.4.2`
 
 - copilot/002-action-input-contract: Added TypeScript 5.x, targeting Node 20 + `@actions/core ^1.11.1`, `@actions/glob ^0.5.0`, `fast-xml-parser ^5.4.2`
 

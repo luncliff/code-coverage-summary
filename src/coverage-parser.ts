@@ -111,13 +111,20 @@ export function parseCoverageFile(
   let i = 1
   for (const pkg of packages) {
     const pkgName = String(pkg['@_name'] ?? '').trim()
-    if (pkg['@_branch-rate'] !== undefined) {
+    const pkgBranchRate = pkg['@_branch-rate']
+    const pkgBranchesCovered = pkg['@_branches-covered']
+    const pkgBranchesValid = pkg['@_branches-valid']
+    if (
+      pkgBranchRate !== undefined ||
+      pkgBranchesCovered !== undefined ||
+      pkgBranchesValid !== undefined
+    ) {
       summary.branchMetricsPresent = true
     }
     const pkgCoverage: PackageCoverage = {
       name: pkgName || `${baseName} Package ${i}`,
       lineRate: safeFloat(pkg['@_line-rate']) ?? 0,
-      branchRate: safeFloat(pkg['@_branch-rate']) ?? 0,
+      branchRate: safeFloat(pkgBranchRate) ?? 0,
       complexity: safeFloat(pkg['@_complexity']) ?? 0
     }
     summary.packages.push(pkgCoverage)

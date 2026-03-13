@@ -8,49 +8,6 @@ This document breaks down the derived requirements from [project-requirements.md
 
 ---
 
-## C) Cobertura parsing
-
-### SI-C1 — Required root attributes
-
-**Statement**: The action shall parse Cobertura XML and require the root coverage attributes `line-rate`, `lines-covered`, and `lines-valid`.
-
-**Traceability**: FR-7
-
-**Acceptance criteria**:
-- If any required attribute is missing, the action logs a parsing error including the filename and fails.
-
-### SI-C2 — Optional branch metrics
-
-**Statement**: Branch metrics are optional and shall not be required for a successful run.
-
-**Traceability**: FR-8
-
-**Acceptance criteria**:
-- If branch metrics are missing entirely, the action still succeeds (unless other failure conditions apply).
-- In that case, branch rate output is suppressed regardless of `hide_branch_rate`.
-
-### SI-C3 — Package rows extraction
-
-**Statement**: The action shall extract package rows from `<package>` elements and capture name, line rate, branch rate (if present), and complexity (if present).
-
-**Traceability**: FR-9
-
-**Acceptance criteria**:
-- Each `<package>` becomes one output row.
-- Missing/unparseable numeric attributes default to 0 for that package.
-
-### SI-C4 — Package name fallback
-
-**Statement**: If a `<package>` has an empty or missing name, the action shall assign a stable fallback name per file.
-
-**Traceability**: FR-9 (legacy parity)
-
-**Acceptance criteria**:
-- For each file, unnamed packages are numbered from 1 in encounter order.
-- Fallback format matches legacy: `<coverage-file-basename> Package <i>`.
-
----
-
 ## D) Aggregation and calculations
 
 ### SI-D1 — Multi-file aggregation: sums

@@ -28,7 +28,7 @@ Code Coverage Summary is compatible with [StepSecurity Secure Workflows](https:/
 ### `filename`
 **Required**
 
-A comma separated list of code coverage files to analyse. Entries are trimmed and empty values are ignored. Also supports using glob patterns to match multiple files relative to the workspace. If there are any spaces in a path or filename this value must be in quotes. Each matched file is logged once with a `Coverage File:` prefix in deterministic order.
+A comma separated list of code coverage files to analyse. Also supports using glob patterns to match multiple files. If there are any spaces in a path or filename this value must be in quotes.
 
 
 ### `badge`

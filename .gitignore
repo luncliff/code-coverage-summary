@@ -369,3 +369,5 @@ docs
 .vscode
 # Jest coverage output
 coverage/
+!__tests__/fixtures/file-discovery/coverage/
+!__tests__/fixtures/file-discovery/coverage/**

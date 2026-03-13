@@ -25,7 +25,7 @@ jobs:
 
 - The action treats `filename` as a comma-separated list, trimming whitespace and ignoring empty entries.
 - Patterns are evaluated relative to the workspace and follow `@actions/glob` rules (globstar, excludes, comments, tilde expansion).
-- Each matched file emits one log line:
+- Each matched file emits one log line (deduplicated and in deterministic order):
 
 ```text
 Coverage File: coverage/unit/coverage.xml

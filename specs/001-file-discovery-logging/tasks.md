@@ -22,7 +22,7 @@ description: "Task list for file discovery and diagnostic logging"
 
 **Purpose**: Shared fixtures and scaffolding for discovery tests.
 
-- [ ] T001 Create discovery fixtures in __tests__/fixtures/file-discovery/coverage/unit.xml, __tests__/fixtures/file-discovery/coverage/integration.xml, and __tests__/fixtures/file-discovery/reports/coverage.xml
+- [X] T001 Create discovery fixtures in __tests__/fixtures/file-discovery/coverage/unit.xml, __tests__/fixtures/file-discovery/coverage/integration.xml, and __tests__/fixtures/file-discovery/reports/coverage.xml
 
 ---
 
@@ -32,8 +32,8 @@ description: "Task list for file discovery and diagnostic logging"
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 [P] Add action test harness helpers in __tests__/helpers/action-test-harness.ts to stub @actions/core inputs/logs and capture info/setFailed output
-- [ ] T003 [P] Update src/index.ts to export run() for tests and enable the action-test-harness usage without removing the existing run() invocation
+- [X] T002 [P] Add action test harness helpers in __tests__/helpers/action-test-harness.ts to stub @actions/core inputs/logs and capture info/setFailed output
+- [X] T003 [P] Update src/index.ts to export run() for tests and enable the action-test-harness usage without removing the existing run() invocation
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel.
 
@@ -47,13 +47,13 @@ description: "Task list for file discovery and diagnostic logging"
 
 ### Tests for User Story 1
 
-- [ ] T004 [P] [US1] Add discovery parsing tests in __tests__/file-discovery.test.ts covering comma-separated patterns, whitespace trimming, empty entries, and workspace-relative globbing using fixtures
+- [X] T004 [P] [US1] Add discovery parsing tests in __tests__/file-discovery.test.ts covering comma-separated patterns, whitespace trimming, empty entries, and workspace-relative globbing using fixtures
 
 ### Implementation for User Story 1
 
-- [ ] T005 [P] [US1] Create src/file-discovery.ts with parseCoveragePatterns to split, trim, and filter filename input entries
-- [ ] T006 [US1] Implement discoverCoverageFiles in src/file-discovery.ts using @actions/glob.create with newline-joined patterns and returning globber.glob() results
-- [ ] T007 [US1] Update src/index.ts to use discoverCoverageFiles for coverage file discovery in place of inline parsing logic
+- [X] T005 [P] [US1] Create src/file-discovery.ts with parseCoveragePatterns to split, trim, and filter filename input entries
+- [X] T006 [US1] Implement discoverCoverageFiles in src/file-discovery.ts using @actions/glob.create with newline-joined patterns and returning globber.glob() results
+- [X] T007 [US1] Update src/index.ts to use discoverCoverageFiles for coverage file discovery in place of inline parsing logic
 
 **Checkpoint**: User Story 1 should be fully functional and independently testable.
 
@@ -67,11 +67,11 @@ description: "Task list for file discovery and diagnostic logging"
 
 ### Tests for User Story 2
 
-- [ ] T008 [P] [US2] Add no-match failure coverage in __tests__/file-discovery.test.ts asserting core.setFailed receives `Error: No files found matching glob pattern.`
+- [X] T008 [P] [US2] Add no-match failure coverage in __tests__/file-discovery.test.ts asserting core.setFailed receives `Error: No files found matching glob pattern.`
 
 ### Implementation for User Story 2
 
-- [ ] T009 [US2] Update src/index.ts to handle an empty discovery result by calling core.setFailed('Error: No files found matching glob pattern.') and returning early
+- [X] T009 [US2] Update src/index.ts to handle an empty discovery result by calling core.setFailed('Error: No files found matching glob pattern.') and returning early
 
 **Checkpoint**: User Story 2 should be fully functional and independently testable.
 
@@ -85,11 +85,11 @@ description: "Task list for file discovery and diagnostic logging"
 
 ### Tests for User Story 3
 
-- [ ] T010 [P] [US3] Add logging/determinism tests in __tests__/file-discovery.test.ts verifying `Coverage File:` output order, no duplicates when multiple patterns match the same file, and stable ordering across runs
+- [X] T010 [P] [US3] Add logging/determinism tests in __tests__/file-discovery.test.ts verifying `Coverage File:` output order, no duplicates when multiple patterns match the same file, and stable ordering across runs
 
 ### Implementation for User Story 3
 
-- [ ] T011 [US3] Ensure src/index.ts logs each discovered file once in discovery order via core.info(`Coverage File: ${file}`), relying on @actions/glob deterministic ordering/deduping
+- [X] T011 [US3] Ensure src/index.ts logs each discovered file once in discovery order via core.info(`Coverage File: ${file}`), relying on @actions/glob deterministic ordering/deduping
 
 **Checkpoint**: User Story 3 should be fully functional and independently testable.
 
@@ -99,8 +99,8 @@ description: "Task list for file discovery and diagnostic logging"
 
 **Purpose**: Documentation updates and cross-story validation.
 
-- [ ] T012 [P] Update README-original.md to document comma-separated filename patterns, deterministic ordering, and `Coverage File:` logging behavior
-- [ ] T013 [P] Refresh wording in specs/001-file-discovery-logging/quickstart.md to mirror the final logging/deterministic ordering behavior
+- [X] T012 [P] Update README-original.md to document comma-separated filename patterns, deterministic ordering, and `Coverage File:` logging behavior
+- [X] T013 [P] Refresh wording in specs/001-file-discovery-logging/quickstart.md to mirror the final logging/deterministic ordering behavior
 
 ---
 

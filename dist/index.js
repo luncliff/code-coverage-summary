@@ -25499,6 +25499,11 @@ var require_glob = __commonJS({
 });
 
 // src/index.ts
+var index_exports = {};
+__export(index_exports, {
+  parseInputs: () => parseInputs
+});
+module.exports = __toCommonJS(index_exports);
 var core = __toESM(require_core());
 var glob = __toESM(require_glob());
 var fs2 = __toESM(require("fs"));
@@ -27285,18 +27290,22 @@ function generateMarkdownOutput(summary, options) {
 }
 
 // src/index.ts
+function parseInputs() {
+  const filename = core.getInput("filename", { required: true });
+  const badge = core.getInput("badge").toLowerCase() === "true";
+  const failBelowMin = core.getInput("fail_below_min").toLowerCase() === "true";
+  const format = core.getInput("format").toLowerCase() || "text";
+  const hideBranchRate = core.getInput("hide_branch_rate").toLowerCase() === "true";
+  const hideComplexity = core.getInput("hide_complexity").toLowerCase() === "true";
+  const indicators = core.getInput("indicators").toLowerCase() === "true";
+  const output = core.getInput("output").toLowerCase() || "console";
+  const thresholdsInput = core.getInput("thresholds") || "50 75";
+  const patterns = filename.split(",").map((p) => p.trim()).filter((p) => p.length > 0);
+  return { filename, badge, failBelowMin, format, hideBranchRate, hideComplexity, indicators, output, thresholdsInput, patterns };
+}
 async function run() {
   try {
-    const filename = core.getInput("filename", { required: true });
-    const badge = core.getInput("badge").toLowerCase() === "true";
-    const failBelowMin = core.getInput("fail_below_min").toLowerCase() === "true";
-    const format = core.getInput("format").toLowerCase();
-    const hideBranchRate = core.getInput("hide_branch_rate").toLowerCase() === "true";
-    const hideComplexity = core.getInput("hide_complexity").toLowerCase() === "true";
-    const indicators = core.getInput("indicators").toLowerCase() !== "false";
-    const output = core.getInput("output").toLowerCase();
-    const thresholdsInput = core.getInput("thresholds") || "50 75";
-    const patterns = filename.split(",").map((p) => p.trim()).filter((p) => p.length > 0);
+    const { badge, failBelowMin, format, hideBranchRate, hideComplexity, indicators, output, thresholdsInput, patterns } = parseInputs();
     const globber = await glob.create(patterns.join("\n"));
     const files = await globber.glob();
     if (files.length === 0) {
@@ -27371,6 +27380,10 @@ async function run() {
   }
 }
 run();
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  parseInputs
+});
 /*! Bundled license information:
 
 undici/lib/web/fetch/body.js:

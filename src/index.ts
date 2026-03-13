@@ -10,23 +10,44 @@ import {
   OutputOptions
 } from './output-generator'
 
+export interface ParsedInputs {
+  filename: string
+  badge: boolean
+  failBelowMin: boolean
+  format: string
+  hideBranchRate: boolean
+  hideComplexity: boolean
+  indicators: boolean
+  output: string
+  thresholdsInput: string
+  patterns: string[]
+}
+
+/** Read and parse all action inputs into a typed object. Pure of file I/O and glob resolution. */
+export function parseInputs(): ParsedInputs {
+  const filename = core.getInput('filename', { required: true })
+  const badge = core.getInput('badge').toLowerCase() === 'true'
+  const failBelowMin = core.getInput('fail_below_min').toLowerCase() === 'true'
+  const format = core.getInput('format').toLowerCase() || 'text'
+  const hideBranchRate = core.getInput('hide_branch_rate').toLowerCase() === 'true'
+  const hideComplexity = core.getInput('hide_complexity').toLowerCase() === 'true'
+  const indicators = core.getInput('indicators').toLowerCase() === 'true'
+  const output = core.getInput('output').toLowerCase() || 'console'
+  const thresholdsInput = core.getInput('thresholds') || '50 75'
+
+  // Resolve comma-separated filenames into individual patterns
+  const patterns = filename
+    .split(',')
+    .map(p => p.trim())
+    .filter(p => p.length > 0)
+
+  return { filename, badge, failBelowMin, format, hideBranchRate, hideComplexity, indicators, output, thresholdsInput, patterns }
+}
+
 async function run(): Promise<void> {
   try {
-    const filename = core.getInput('filename', { required: true })
-    const badge = core.getInput('badge').toLowerCase() === 'true'
-    const failBelowMin = core.getInput('fail_below_min').toLowerCase() === 'true'
-    const format = core.getInput('format').toLowerCase()
-    const hideBranchRate = core.getInput('hide_branch_rate').toLowerCase() === 'true'
-    const hideComplexity = core.getInput('hide_complexity').toLowerCase() === 'true'
-    const indicators = core.getInput('indicators').toLowerCase() !== 'false'
-    const output = core.getInput('output').toLowerCase()
-    const thresholdsInput = core.getInput('thresholds') || '50 75'
+    const { badge, failBelowMin, format, hideBranchRate, hideComplexity, indicators, output, thresholdsInput, patterns } = parseInputs()
 
-    // Resolve glob patterns — comma-separated list supported
-    const patterns = filename
-      .split(',')
-      .map(p => p.trim())
-      .filter(p => p.length > 0)
     const globber = await glob.create(patterns.join('\n'))
     const files = await globber.glob()
 

@@ -19,7 +19,7 @@
 
 **Purpose**: Confirm development environment and clean baseline before any changes.
 
-- [ ] T001 Verify feature branch `copilot/002-action-input-contract` is active, run `npm install` from repository root to confirm dependencies are installed, and confirm `__tests__/index.test.ts` does not yet exist
+- [X] T001 Verify feature branch `copilot/002-action-input-contract` is active, run `npm install` from repository root to confirm dependencies are installed, and confirm `__tests__/index.test.ts` does not yet exist
 
 ---
 
@@ -29,7 +29,7 @@
 
 **⚠️ CRITICAL**: Must complete before writing new tests or applying fixes.
 
-- [ ] T002 Run `npm test` from repository root and confirm `coverage-parser.test.ts` and `output-generator.test.ts` all pass (zero failures); record the passing test count as the pre-change baseline
+- [X] T002 Run `npm test` from repository root and confirm `coverage-parser.test.ts` and `output-generator.test.ts` all pass (zero failures); record the passing test count as the pre-change baseline
 
 **Checkpoint**: Baseline confirmed — new test file and fix can now be applied.
 
@@ -45,9 +45,9 @@
 
 > **Write these tests FIRST. US1 tests should PASS immediately because defaults are already wired correctly in `src/index.ts`. Failure here indicates a regression.**
 
-- [ ] T003 [US1] Create `__tests__/index.test.ts`: add `jest.mock('@actions/core')` at the top of the file, import `getInput` and `setFailed` mocks, and add a `describe('FR-001: declared input names', () => { … })` block that calls `getInput` with each of the nine input names (`filename`, `badge`, `fail_below_min`, `format`, `hide_branch_rate`, `hide_complexity`, `indicators`, `output`, `thresholds`) and asserts the mock is invoked with the exact string names declared in `action.yml`
+- [X] T003 [US1] Create `__tests__/index.test.ts`: add `jest.mock('@actions/core')` at the top of the file, import `getInput` and `setFailed` mocks, and add a `describe('FR-001: declared input names', () => { … })` block that calls `getInput` with each of the nine input names (`filename`, `badge`, `fail_below_min`, `format`, `hide_branch_rate`, `hide_complexity`, `indicators`, `output`, `thresholds`) and asserts the mock is invoked with the exact string names declared in `action.yml`
 
-- [ ] T004 [US1] Add a `describe('FR-002: default-equivalence contract', () => { … })` block to `__tests__/index.test.ts`: mock `getInput` to return `''` for every optional input (simulating omission) and assert that the resolved values equal the documented defaults — `badge=false`, `fail_below_min=false`, `format='text'`, `hide_branch_rate=false`, `hide_complexity=false`, `indicators=true`, `output='console'`, `thresholds='50 75'`; also assert that a second scenario that explicitly provides each default string yields identical resolved values, satisfying SC-001
+- [X] T004 [US1] Add a `describe('FR-002: default-equivalence contract', () => { … })` block to `__tests__/index.test.ts`: mock `getInput` to return `''` for every optional input (simulating omission) and assert that the resolved values equal the documented defaults — `badge=false`, `fail_below_min=false`, `format='text'`, `hide_branch_rate=false`, `hide_complexity=false`, `indicators=true`, `output='console'`, `thresholds='50 75'`; also assert that a second scenario that explicitly provides each default string yields identical resolved values, satisfying SC-001
 
 ### No implementation change required for User Story 1
 
@@ -67,7 +67,7 @@ The nine input names and their default strings are already correctly declared in
 
 > **Write these tests FIRST. US2 tests should PASS immediately because the CSV/glob parsing logic is already correct in `src/index.ts`. Failure here indicates a regression.**
 
-- [ ] T005 [P] [US2] Add a `describe('FR-003/FR-004/FR-005: filename parsing', () => { … })` block to `__tests__/index.test.ts` containing:
+- [X] T005 [P] [US2] Add a `describe('FR-003/FR-004/FR-005: filename parsing', () => { … })` block to `__tests__/index.test.ts` containing:
   - A test that mocks `getInput('filename')` returning `'a.xml,b.xml'` and asserts `glob.create` is called with the pattern string `'a.xml\nb.xml'` (two patterns joined by newline, per `@actions/glob` API)
   - A test that mocks `filename` returning a glob string `'coverage/**/coverage.cobertura.xml'` and asserts `glob.create` receives that single pattern unchanged (FR-004)
   - A test that mocks `filename` returning `'path with spaces/coverage.xml'` and asserts the internal spaces are preserved after trimming (FR-005)
@@ -92,7 +92,7 @@ The `filename` split/trim/filter/join logic in `src/index.ts` is already correct
 
 > **Write these tests FIRST. The `indicators` rows for `'1'`, `'yes'`, `'on'`, and `''` will FAIL with the current `!== 'false'` logic — that is the expected TDD red state.**
 
-- [ ] T006 [US3] Add a `describe('FR-006: strict boolean input parsing', () => { … })` block to `__tests__/index.test.ts` using `test.each` with the following matrix for each of the five boolean inputs (`badge`, `fail_below_min`, `hide_branch_rate`, `hide_complexity`, `indicators`):
+- [X] T006 [US3] Add a `describe('FR-006: strict boolean input parsing', () => { … })` block to `__tests__/index.test.ts` using `test.each` with the following matrix for each of the five boolean inputs (`badge`, `fail_below_min`, `hide_branch_rate`, `hide_complexity`, `indicators`):
 
   | Input string | Expected parsed result |
   |---|---|
@@ -110,11 +110,11 @@ The `filename` split/trim/filter/join logic in `src/index.ts` is already correct
 
   Each test case mocks `getInput('<input-name>')` to return the input string and asserts the resulting boolean fed into `OutputOptions` (or verified via `core.info` output) equals the expected result; the `indicators` input is the critical case because the current `!== 'false'` logic will produce wrong results for `'1'`, `'yes'`, `'on'`, and `''`
 
-- [ ] T007 [US3] Run `npm test` from repository root and confirm the FR-006 `indicators` test cases for `'1'`, `'yes'`, `'on'`, and `''` FAIL — this documents that the bug exists and the TDD red state is established
+- [X] T007 [US3] Run `npm test` from repository root and confirm the FR-006 `indicators` test cases for `'1'`, `'yes'`, `'on'`, and `''` FAIL — this documents that the bug exists and the TDD red state is established
 
 ### Implementation for User Story 3
 
-- [ ] T008 [US3] Apply the one-line fix in `src/index.ts` line 21: change
+- [X] T008 [US3] Apply the one-line fix in `src/index.ts` line 21: change
 
   ```ts
   const indicators = core.getInput('indicators').toLowerCase() !== 'false'
@@ -128,7 +128,7 @@ The `filename` split/trim/filter/join logic in `src/index.ts` is already correct
 
   No other changes to `src/index.ts` — all other boolean inputs already use `=== 'true'`.
 
-- [ ] T009 [US3] Run `npm test` from repository root and confirm **all** tests pass — FR-001 through FR-006 across all three user stories — with zero failures and zero regressions in `coverage-parser.test.ts` and `output-generator.test.ts`
+- [X] T009 [US3] Run `npm test` from repository root and confirm **all** tests pass — FR-001 through FR-006 across all three user stories — with zero failures and zero regressions in `coverage-parser.test.ts` and `output-generator.test.ts`
 
 **Checkpoint**: US3 tests pass — strict boolean contract enforced; `indicators` bug resolved.
 
@@ -138,13 +138,13 @@ The `filename` split/trim/filter/join logic in `src/index.ts` is already correct
 
 **Purpose**: Rebuild the distributable bundle, verify interface parity, and confirm quality gates are satisfied.
 
-- [ ] T010 [P] Rebuild the distributable bundle by running `npm run build` from repository root and confirm `dist/index.js` is updated with no TypeScript compiler errors — this is required for the action fix to take effect on GitHub-hosted runners
+- [X] T010 [P] Rebuild the distributable bundle by running `npm run build` from repository root and confirm `dist/index.js` is updated with no TypeScript compiler errors — this is required for the action fix to take effect on GitHub-hosted runners
 
-- [ ] T011 [P] Verify interface parity: compare the nine input names read by `core.getInput(…)` in `src/index.ts` against the nine inputs declared in `action.yml` and confirm they match exactly (no additions, removals, or renames); satisfies SC-004
+- [X] T011 [P] Verify interface parity: compare the nine input names read by `core.getInput(…)` in `src/index.ts` against the nine inputs declared in `action.yml` and confirm they match exactly (no additions, removals, or renames); satisfies SC-004
 
 - [ ] T012 Validate the quickstart scenario from `specs/copilot/002-action-input-contract/quickstart.md`: confirm the workflow example with `indicators: 'true'` produces the expected enabled-indicator behavior and the `indicators: '1'` example now correctly resolves to disabled (demonstrating the fix)
 
-- [ ] T013 [P] Confirm `sonar-project.properties` test source paths include `__tests__/index.test.ts` (or the project-wide glob already covers it) so the new test file is picked up by SonarCloud static analysis
+- [X] T013 [P] Confirm `sonar-project.properties` test source paths include `__tests__/index.test.ts` (or the project-wide glob already covers it) so the new test file is picked up by SonarCloud static analysis
 
 ---
 

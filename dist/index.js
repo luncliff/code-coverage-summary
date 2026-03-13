@@ -25499,8 +25499,12 @@ var require_glob = __commonJS({
 });
 
 // src/index.ts
+var index_exports = {};
+__export(index_exports, {
+  run: () => run
+});
+module.exports = __toCommonJS(index_exports);
 var core = __toESM(require_core());
-var glob = __toESM(require_glob());
 var fs2 = __toESM(require("fs"));
 
 // node_modules/fast-xml-parser/src/util.js
@@ -27158,6 +27162,19 @@ function parseCoverageFile(filename, summary) {
   return summary;
 }
 
+// src/file-discovery.ts
+var glob = __toESM(require_glob());
+function parseCoveragePatterns(filename) {
+  return filename.split(",").map((pattern) => pattern.trim()).filter((pattern) => pattern.length > 0);
+}
+async function discoverCoverageFiles(patterns) {
+  if (patterns.length === 0) {
+    return [];
+  }
+  const globber = await glob.create(patterns.join("\n"));
+  return globber.glob();
+}
+
 // src/output-generator.ts
 function parseThresholds(thresholds) {
   const trimmed = thresholds.trim();
@@ -27296,9 +27313,8 @@ async function run() {
     const indicators = core.getInput("indicators").toLowerCase() !== "false";
     const output = core.getInput("output").toLowerCase();
     const thresholdsInput = core.getInput("thresholds") || "50 75";
-    const patterns = filename.split(",").map((p) => p.trim()).filter((p) => p.length > 0);
-    const globber = await glob.create(patterns.join("\n"));
-    const files = await globber.glob();
+    const patterns = parseCoveragePatterns(filename);
+    const files = await discoverCoverageFiles(patterns);
     if (files.length === 0) {
       core.setFailed("Error: No files found matching glob pattern.");
       return;
@@ -27371,6 +27387,10 @@ async function run() {
   }
 }
 run();
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  run
+});
 /*! Bundled license information:
 
 undici/lib/web/fetch/body.js:

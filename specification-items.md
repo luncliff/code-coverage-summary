@@ -8,41 +8,6 @@ This document breaks down the derived requirements from [project-requirements.md
 
 ---
 
-## A) Action contract (inputs)
-
-### SI-A1 — Input surface area and defaults
-
-**Statement**: The action shall accept exactly the inputs defined in the action metadata and apply the same defaults.
-
-**Traceability**: FR-1
-
-**Acceptance criteria**:
-- The action reads these inputs: `filename`, `badge`, `fail_below_min`, `format`, `hide_branch_rate`, `hide_complexity`, `indicators`, `output`, `thresholds`.
-- When an optional input is omitted, the action uses the default value declared in the action metadata.
-
-### SI-A2 — `filename` parsing (CSV + globs)
-
-**Statement**: The action shall interpret `filename` as a comma-separated list of file patterns and expand glob patterns into a set of matched files.
-
-**Traceability**: FR-2
-
-**Acceptance criteria**:
-- `filename: "a.xml,b.xml"` is treated as two patterns.
-- `filename: "coverage/**/coverage.cobertura.xml"` is treated as a pattern that may match multiple files.
-- Paths containing spaces work when quoted in workflow YAML.
-
-### SI-A3 — Boolean input semantics (strict true)
-
-**Statement**: For compatibility, boolean-like inputs shall evaluate to `true` only when the provided string equals `"true"` case-insensitively.
-
-**Traceability**: FR-3
-
-**Acceptance criteria**:
-- Input values `true`, `TRUE`, `True` evaluate as true.
-- Input values `1`, `yes`, `on`, empty, and any other string evaluate as false.
-
----
-
 ## C) Cobertura parsing
 
 ### SI-C1 — Required root attributes

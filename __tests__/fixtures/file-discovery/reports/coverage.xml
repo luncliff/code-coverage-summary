@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<coverage line-rate="0.7" branch-rate="0" lines-covered="7" lines-valid="10" branches-covered="0" branches-valid="0">
+  <packages>
+    <package name="Reports" line-rate="0.7" branch-rate="0" complexity="3" />
+  </packages>
+</coverage>

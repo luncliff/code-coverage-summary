@@ -22,11 +22,11 @@ description: "Task list for Cobertura XML parsing (003)"
 
 **Purpose**: Add shared test fixtures required by multiple user stories.
 
-- [ ] T001 [P] Add missing-root fixture in src/coverage.missing-root.xml (omit a required root attribute)
-- [ ] T002 [P] Add invalid-root fixture in src/coverage.invalid-root.xml (non-numeric required root attribute)
-- [ ] T003 [P] Add no-branches fixture in src/coverage.no-branches.xml (required root attributes, no branch metrics)
-- [ ] T004 [P] Add no-packages fixture in src/coverage.no-packages.xml (required root attributes, zero <package> elements)
-- [ ] T005 [P] Add unnamed-packages fixture in src/coverage.unnamed-packages.xml (multiple packages with missing names and numeric attributes)
+- [X] T001 [P] Add missing-root fixture in src/coverage.missing-root.xml (omit a required root attribute)
+- [X] T002 [P] Add invalid-root fixture in src/coverage.invalid-root.xml (non-numeric required root attribute)
+- [X] T003 [P] Add no-branches fixture in src/coverage.no-branches.xml (required root attributes, no branch metrics)
+- [X] T004 [P] Add no-packages fixture in src/coverage.no-packages.xml (required root attributes, zero <package> elements)
+- [X] T005 [P] Add unnamed-packages fixture in src/coverage.unnamed-packages.xml (multiple packages with missing names and numeric attributes)
 
 ---
 
@@ -34,8 +34,8 @@ description: "Task list for Cobertura XML parsing (003)"
 
 **Purpose**: Shared data structures required for branch-metric detection across stories.
 
-- [ ] T006 Update CoverageSummary and createEmptySummary in src/coverage-parser.ts to include a branchMetricsPresent boolean defaulting to false
-- [ ] T007 [P] Update test helpers in __tests__/output-generator.test.ts to include branchMetricsPresent in CoverageSummary fixtures
+- [X] T006 Update CoverageSummary and createEmptySummary in src/coverage-parser.ts to include a branchMetricsPresent boolean defaulting to false
+- [X] T007 [P] Update test helpers in __tests__/output-generator.test.ts to include branchMetricsPresent in CoverageSummary fixtures
 
 **Checkpoint**: Shared summary structure ready; user story work can proceed.
 
@@ -49,12 +49,12 @@ description: "Task list for Cobertura XML parsing (003)"
 
 ### Tests for User Story 1 (write FIRST, expect failures) ⚠️
 
-- [ ] T008 [US1] Add failing tests in __tests__/coverage-parser.test.ts for missing/invalid root attributes using src/coverage.missing-root.xml and src/coverage.invalid-root.xml
+- [X] T008 [US1] Add failing tests in __tests__/coverage-parser.test.ts for missing/invalid root attributes using src/coverage.missing-root.xml and src/coverage.invalid-root.xml
 
 ### Implementation for User Story 1
 
-- [ ] T009 [P] [US1] Enforce required root attribute parsing with descriptive errors in src/coverage-parser.ts
-- [ ] T010 [P] [US1] Confirm parsing error messages include filenames in src/index.ts (adjust `Parsing Error` formatting if needed)
+- [X] T009 [P] [US1] Enforce required root attribute parsing with descriptive errors in src/coverage-parser.ts
+- [X] T010 [P] [US1] Confirm parsing error messages include filenames in src/index.ts (adjust `Parsing Error` formatting if needed)
 
 **Checkpoint**: Required root metrics validation works and is independently testable.
 
@@ -68,12 +68,12 @@ description: "Task list for Cobertura XML parsing (003)"
 
 ### Tests for User Story 2 (write FIRST, expect failures) ⚠️
 
-- [ ] T011 [US2] Add tests in __tests__/coverage-parser.test.ts for src/coverage.no-branches.xml asserting parsing succeeds, branch metrics default to 0, and branchMetricsPresent is false
+- [X] T011 [US2] Add tests in __tests__/coverage-parser.test.ts for src/coverage.no-branches.xml asserting parsing succeeds, branch metrics default to 0, and branchMetricsPresent is false
 
 ### Implementation for User Story 2
 
-- [ ] T012 [P] [US2] Track branch metric presence when parsing in src/coverage-parser.ts (set branchMetricsPresent when any branch attributes exist)
-- [ ] T013 [P] [US2] Use branchMetricsPresent to compute effectiveHideBranchRate in src/index.ts so branch output is suppressed only when all files lack branch metrics
+- [X] T012 [P] [US2] Track branch metric presence when parsing in src/coverage-parser.ts (set branchMetricsPresent when any branch attributes exist)
+- [X] T013 [P] [US2] Use branchMetricsPresent to compute effectiveHideBranchRate in src/index.ts so branch output is suppressed only when all files lack branch metrics
 
 **Checkpoint**: Branch metrics are optional and branch output suppression matches the specification.
 
@@ -87,13 +87,13 @@ description: "Task list for Cobertura XML parsing (003)"
 
 ### Tests for User Story 3 (write FIRST, expect failures) ⚠️
 
-- [ ] T014 [US3] Add tests in __tests__/coverage-parser.test.ts for src/coverage.no-packages.xml verifying parsing succeeds with zero package rows
-- [ ] T015 [US3] Add tests in __tests__/coverage-parser.test.ts for src/coverage.unnamed-packages.xml verifying fallback names (`<basename> Package <i>`) and numeric defaults of 0
+- [X] T014 [US3] Add tests in __tests__/coverage-parser.test.ts for src/coverage.no-packages.xml verifying parsing succeeds with zero package rows
+- [X] T015 [US3] Add tests in __tests__/coverage-parser.test.ts for src/coverage.unnamed-packages.xml verifying fallback names (`<basename> Package <i>`) and numeric defaults of 0
 
 ### Implementation for User Story 3
 
-- [ ] T016 [P] [US3] Allow missing/empty <packages> elements without throwing in src/coverage-parser.ts while preserving fallback naming/defaults
-- [ ] T017 [P] [US3] Remove the zero-packages failure guard in src/index.ts so line-only coverage succeeds when no packages exist
+- [X] T016 [P] [US3] Allow missing/empty <packages> elements without throwing in src/coverage-parser.ts while preserving fallback naming/defaults
+- [X] T017 [P] [US3] Remove the zero-packages failure guard in src/index.ts so line-only coverage succeeds when no packages exist
 
 **Checkpoint**: Package row extraction is stable and zero-package files succeed.
 
@@ -103,7 +103,7 @@ description: "Task list for Cobertura XML parsing (003)"
 
 **Purpose**: Final verification and quality checks.
 
-- [ ] T018 Run Jest unit tests covering __tests__/coverage-parser.test.ts and __tests__/output-generator.test.ts after all story work completes
+- [X] T018 Run Jest unit tests covering __tests__/coverage-parser.test.ts and __tests__/output-generator.test.ts after all story work completes
 
 ---
 

@@ -3,7 +3,7 @@
 **Feature Branch**: `003-cobertura-xml-parsing`  
 **Created**: 2026-03-13  
 **Status**: Draft  
-**Input**: User description: "Create a new feature specification from specification-items.md Section C (spec code 003, Cobertura XML parsing) and cross-check with project-requirements.md. Follow repository spec template conventions and create the new spec directory under specs/003-<name> consistent with existing specs/001 and specs/002. After generating the specification, remove Section C from specification-items.md as instructed. Summarize changes made and new files added."
+**Input**: Cobertura XML parsing requirements (spec code 003) derived from specification-items.md Section C and project-requirements.md.
 
 ## User Scenarios & Testing *(mandatory)*
 

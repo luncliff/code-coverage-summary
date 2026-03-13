@@ -172,3 +172,249 @@ describe('generateMarkdownOutput', () => {
     expect(text).toContain('_Minimum allowed line rate is')
   })
 })
+
+// ─── SI-E1: Text output precision ────────────────────────────────────────────
+
+describe('generateTextOutput precision', () => {
+  test('badge URL is on line[0] and blank string is on line[1]', () => {
+    const opts = makeOptions({ badgeUrl: 'https://example.com/badge.svg' })
+    const lines = generateTextOutput(makeSummary(), opts).split('\n')
+    expect(lines[0]).toBe('https://example.com/badge.svg')
+    expect(lines[1]).toBe('')
+  })
+
+  test('first line contains package name when badgeUrl is null', () => {
+    const opts = makeOptions({ badgeUrl: null })
+    const output = generateTextOutput(makeSummary(), opts)
+    const lines = output.split('\n')
+    expect(lines[0]).toContain('MyPackage')
+    expect(output).not.toMatch(/^\n/)
+  })
+
+  test('branch rate appears in package row when hideBranchRate is false', () => {
+    const opts = makeOptions({ hideBranchRate: false })
+    const output = generateTextOutput(makeSummary(), opts)
+    expect(output).toContain('Branch Rate = 69%')
+  })
+
+  test('branch totals appear in summary row when hideBranchRate is false', () => {
+    const opts = makeOptions({ hideBranchRate: false })
+    const output = generateTextOutput(makeSummary(), opts)
+    expect(output).toContain('(262 / 378)')
+  })
+
+  test('complexity appears in package row when hideComplexity is false', () => {
+    const opts = makeOptions({ hideComplexity: false })
+    const output = generateTextOutput(makeSummary(), opts)
+    expect(output).toContain('Complexity = 671')
+  })
+
+  test('failBelowMin message shows threshold as whole-number percentage', () => {
+    const opts = makeOptions({ failBelowMin: true })
+    const output = generateTextOutput(makeSummary(), opts)
+    expect(output).toContain('Minimum allowed line rate is 50%')
+  })
+})
+
+// ─── SI-E2: Markdown output precision ────────────────────────────────────────
+
+describe('generateMarkdownOutput precision', () => {
+  test('first line is full table header when badgeUrl is null', () => {
+    const opts = makeOptions({ badgeUrl: null })
+    const lines = generateMarkdownOutput(makeSummary(), opts).split('\n')
+    expect(lines[0]).toBe('Package | Line Rate | Branch Rate | Complexity | Health')
+  })
+
+  test('badge image tag is exact markdown syntax on line[0]', () => {
+    const badgeUrl = 'https://img.shields.io/badge/Code%20Coverage-83%25-success?style=flat'
+    const opts = makeOptions({ badgeUrl })
+    const lines = generateMarkdownOutput(makeSummary(), opts).split('\n')
+    expect(lines[0]).toBe(`![Code Coverage](${badgeUrl})`)
+  })
+
+  test('line[1] is blank string between badge image and table header', () => {
+    const opts = makeOptions({ badgeUrl: 'https://example.com/badge.svg' })
+    const lines = generateMarkdownOutput(makeSummary(), opts).split('\n')
+    expect(lines[1]).toBe('')
+  })
+
+  test('summary line rate value is wrapped in double asterisks', () => {
+    const output = generateMarkdownOutput(makeSummary({ lineRate: 0.83 }), makeOptions())
+    expect(output).toContain('**83%**')
+  })
+
+  test('summary branch rate value is wrapped in double asterisks', () => {
+    const opts = makeOptions({ hideBranchRate: false })
+    const output = generateMarkdownOutput(makeSummary({ branchRate: 0.69 }), opts)
+    expect(output).toContain('**69%**')
+  })
+
+  test('summary complexity value is wrapped in double asterisks', () => {
+    const opts = makeOptions({ hideComplexity: false })
+    const output = generateMarkdownOutput(makeSummary({ complexity: 671 }), opts)
+    expect(output).toContain('**671**')
+  })
+
+  test('table header equals "Package | Line Rate" when all optional columns are hidden', () => {
+    const opts = makeOptions({ hideBranchRate: true, hideComplexity: true, indicators: false, badgeUrl: null })
+    const lines = generateMarkdownOutput(makeSummary(), opts).split('\n')
+    expect(lines[0]).toBe('Package | Line Rate')
+  })
+
+  test('failBelowMin note uses backtick-quoted percentage', () => {
+    const opts = makeOptions({ failBelowMin: true })
+    const output = generateMarkdownOutput(makeSummary(), opts)
+    expect(output).toContain('_Minimum allowed line rate is `50%`_')
+  })
+})
+
+// ─── SI-E4: Health indicator precision ───────────────────────────────────────
+
+describe('health indicators precision', () => {
+  test('❌ (U+274C) exact character when lineRate is below lower threshold', () => {
+    const summary = makeSummary({ lineRate: 0.3, packages: [{ name: 'P', lineRate: 0.3, branchRate: 0, complexity: 0 }] })
+    const output = generateTextOutput(summary, makeOptions({ indicators: true }))
+    expect(output).toContain('❌')
+  })
+
+  test('➖ (U+2796) exact character when lineRate is between thresholds', () => {
+    const summary = makeSummary({ lineRate: 0.6, packages: [{ name: 'P', lineRate: 0.6, branchRate: 0, complexity: 0 }] })
+    const output = generateTextOutput(summary, makeOptions({ indicators: true }))
+    expect(output).toContain('➖')
+  })
+
+  test('✔ (U+2714) exact character when lineRate is at or above upper threshold', () => {
+    const summary = makeSummary({ lineRate: 0.9, packages: [{ name: 'P', lineRate: 0.9, branchRate: 0, complexity: 0 }] })
+    const output = generateTextOutput(summary, makeOptions({ indicators: true }))
+    expect(output).toContain('✔')
+  })
+
+  test('➖ when lineRate equals lower threshold exactly (boundary)', () => {
+    const summary = makeSummary({ lineRate: 0.5, packages: [{ name: 'P', lineRate: 0.5, branchRate: 0, complexity: 0 }] })
+    const output = generateTextOutput(summary, makeOptions({ indicators: true }))
+    expect(output).toContain('➖')
+    expect(output).not.toContain('❌')
+  })
+
+  test('✔ when lineRate equals upper threshold exactly (boundary)', () => {
+    const summary = makeSummary({ lineRate: 0.75, packages: [{ name: 'P', lineRate: 0.75, branchRate: 0, complexity: 0 }] })
+    const output = generateTextOutput(summary, makeOptions({ indicators: true }))
+    expect(output).toContain('✔')
+    expect(output).not.toContain('➖')
+  })
+
+  test('no indicator symbols appear anywhere when indicators is false', () => {
+    const output = generateTextOutput(makeSummary(), makeOptions({ indicators: false }))
+    expect(output).not.toMatch(/[❌➖✔]/u)
+  })
+})
+
+// ─── SI-E5: Badge URL precision ───────────────────────────────────────────────
+
+describe('generateBadgeUrl precision', () => {
+  test('full URL for 83% success', () => {
+    const result = generateBadgeUrl(makeSummary({ lineRate: 0.83 }), { lower: 0.5, upper: 0.75 })
+    expect(result).toBe('https://img.shields.io/badge/Code%20Coverage-83%25-success?style=flat')
+  })
+
+  test('full URL for 40% critical', () => {
+    const result = generateBadgeUrl(makeSummary({ lineRate: 0.4 }), { lower: 0.5, upper: 0.75 })
+    expect(result).toBe('https://img.shields.io/badge/Code%20Coverage-40%25-critical?style=flat')
+  })
+
+  test('full URL for 60% yellow', () => {
+    const result = generateBadgeUrl(makeSummary({ lineRate: 0.6 }), { lower: 0.5, upper: 0.75 })
+    expect(result).toBe('https://img.shields.io/badge/Code%20Coverage-60%25-yellow?style=flat')
+  })
+
+  test('0% encodes as 0%25 in URL', () => {
+    const result = generateBadgeUrl(makeSummary({ lineRate: 0.0 }), { lower: 0.5, upper: 0.75 })
+    expect(result).toContain('-0%25-')
+  })
+
+  test('100% encodes as 100%25 in URL', () => {
+    const result = generateBadgeUrl(makeSummary({ lineRate: 1.0 }), { lower: 0.5, upper: 0.75 })
+    expect(result).toContain('-100%25-')
+  })
+
+  test('style=flat query parameter present for all three colors', () => {
+    expect(generateBadgeUrl(makeSummary({ lineRate: 0.3 }), { lower: 0.5, upper: 0.75 })).toContain('?style=flat')
+    expect(generateBadgeUrl(makeSummary({ lineRate: 0.6 }), { lower: 0.5, upper: 0.75 })).toContain('?style=flat')
+    expect(generateBadgeUrl(makeSummary({ lineRate: 0.9 }), { lower: 0.5, upper: 0.75 })).toContain('?style=flat')
+  })
+
+  test('exactly at lower threshold yields yellow (not critical)', () => {
+    const result = generateBadgeUrl(makeSummary({ lineRate: 0.5 }), { lower: 0.5, upper: 0.75 })
+    expect(result).toContain('yellow')
+    expect(result).not.toContain('critical')
+  })
+
+  test('exactly at upper threshold yields success (not yellow)', () => {
+    const result = generateBadgeUrl(makeSummary({ lineRate: 0.75 }), { lower: 0.5, upper: 0.75 })
+    expect(result).toContain('success')
+    expect(result).not.toContain('yellow')
+  })
+})
+
+// ─── SI-E3: Complexity formatting precision ───────────────────────────────────
+
+describe('formatComplexity via generateTextOutput', () => {
+  test('integer complexity renders without decimal point', () => {
+    const summary = makeSummary({ complexity: 5, packages: [{ name: 'P', lineRate: 0.83, branchRate: 0.69, complexity: 5 }] })
+    const output = generateTextOutput(summary, makeOptions({ hideComplexity: false }))
+    expect(output).toContain('Complexity = 5')
+    expect(output).not.toContain('Complexity = 5.')
+  })
+
+  test('non-integer complexity renders with exactly 4 decimal places', () => {
+    const summary = makeSummary({ complexity: 3.14159, packages: [{ name: 'P', lineRate: 0.83, branchRate: 0.69, complexity: 3.14159 }] })
+    const output = generateTextOutput(summary, makeOptions({ hideComplexity: false }))
+    expect(output).toContain('Complexity = 3.1416')
+  })
+
+  test('zero complexity renders as "0" with no decimal point', () => {
+    const summary = makeSummary({ complexity: 0, packages: [{ name: 'P', lineRate: 0.83, branchRate: 0.69, complexity: 0 }] })
+    const output = generateTextOutput(summary, makeOptions({ hideComplexity: false }))
+    expect(output).toContain('Complexity = 0')
+    expect(output).not.toContain('Complexity = 0.')
+  })
+
+  test('0.0 (float zero) renders as "0"', () => {
+    const summary = makeSummary({ complexity: 0.0, packages: [{ name: 'P', lineRate: 0.83, branchRate: 0.69, complexity: 0.0 }] })
+    const output = generateTextOutput(summary, makeOptions({ hideComplexity: false }))
+    expect(output).toContain('Complexity = 0')
+    expect(output).not.toContain('Complexity = 0.')
+  })
+})
+
+// ─── Edge cases ───────────────────────────────────────────────────────────────
+
+describe('edge cases', () => {
+  test('branch output suppressed in text format when all branch values are zero', () => {
+    const summary = makeSummary({ branchRate: 0, branchesCovered: 0, branchesValid: 0, packages: [{ name: 'P', lineRate: 0.83, branchRate: 0, complexity: 0 }] })
+    const output = generateTextOutput(summary, makeOptions({ hideBranchRate: false }))
+    expect(output).not.toContain('Branch Rate')
+  })
+
+  test('branch output suppressed in markdown format when all branch values are zero', () => {
+    const summary = makeSummary({ branchRate: 0, branchesCovered: 0, branchesValid: 0, packages: [{ name: 'P', lineRate: 0.83, branchRate: 0, complexity: 0 }] })
+    const output = generateMarkdownOutput(summary, makeOptions({ hideBranchRate: false }))
+    expect(output).not.toContain('Branch Rate')
+  })
+
+  test('no badge content appears when badgeUrl is null', () => {
+    const opts = makeOptions({ badgeUrl: null })
+    const textOutput = generateTextOutput(makeSummary(), opts)
+    const markdownOutput = generateMarkdownOutput(makeSummary(), opts)
+    expect(textOutput).not.toContain('shields.io')
+    expect(textOutput).not.toContain('![Code Coverage]')
+    expect(markdownOutput).not.toContain('shields.io')
+    expect(markdownOutput).not.toContain('![Code Coverage]')
+  })
+
+  test('markdown header is exactly "Package | Line Rate" when hideBranchRate=true, hideComplexity=true, indicators=false', () => {
+    const opts = makeOptions({ hideBranchRate: true, hideComplexity: true, indicators: false, badgeUrl: null })
+    const lines = generateMarkdownOutput(makeSummary(), opts).split('\n')
+    expect(lines[0]).toBe('Package | Line Rate')
+  })
+})

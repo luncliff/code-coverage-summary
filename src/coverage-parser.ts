@@ -17,6 +17,7 @@ export interface CoverageSummary {
   branchesCovered: number
   branchesValid: number
   complexity: number
+  branchMetricsPresent: boolean
   packages: PackageCoverage[]
 }
 
@@ -29,6 +30,7 @@ export function createEmptySummary(): CoverageSummary {
     branchesCovered: 0,
     branchesValid: 0,
     complexity: 0,
+    branchMetricsPresent: false,
     packages: []
   }
 }
@@ -78,30 +80,51 @@ export function parseCoverageFile(
   if (linesValid === null) throw new Error('Overall lines valid not found')
   summary.linesValid += linesValid
 
-  // Branch rate is optional — only process when the attribute exists
   const branchRateStr = coverage['@_branch-rate']
-  if (branchRateStr !== undefined) {
+  const branchesCoveredStr = coverage['@_branches-covered']
+  const branchesValidStr = coverage['@_branches-valid']
+  const rootBranchMetricsPresent =
+    branchRateStr !== undefined ||
+    branchesCoveredStr !== undefined ||
+    branchesValidStr !== undefined
+
+  if (rootBranchMetricsPresent) {
+    summary.branchMetricsPresent = true
     summary.branchRate += safeFloat(branchRateStr) ?? 0
-    summary.branchesCovered += safeInt(coverage['@_branches-covered']) ?? 0
-    summary.branchesValid += safeInt(coverage['@_branches-valid']) ?? 0
+    summary.branchesCovered += safeInt(branchesCoveredStr) ?? 0
+    summary.branchesValid += safeInt(branchesValidStr) ?? 0
   }
 
   // Parse packages
   const packagesEl = coverage?.packages
-  if (!packagesEl) throw new Error('No package data found')
+  if (!packagesEl || typeof packagesEl !== 'object') {
+    return summary
+  }
 
   let packages = packagesEl?.package
-  if (!packages) throw new Error('No package data found')
+  if (packages === undefined) {
+    return summary
+  }
   if (!Array.isArray(packages)) packages = [packages]
 
   const baseName = path.basename(filename, path.extname(filename))
   let i = 1
   for (const pkg of packages) {
     const pkgName = String(pkg['@_name'] ?? '').trim()
+    const pkgBranchRate = pkg['@_branch-rate']
+    const pkgBranchesCovered = pkg['@_branches-covered']
+    const pkgBranchesValid = pkg['@_branches-valid']
+    if (
+      pkgBranchRate !== undefined ||
+      pkgBranchesCovered !== undefined ||
+      pkgBranchesValid !== undefined
+    ) {
+      summary.branchMetricsPresent = true
+    }
     const pkgCoverage: PackageCoverage = {
       name: pkgName || `${baseName} Package ${i}`,
       lineRate: safeFloat(pkg['@_line-rate']) ?? 0,
-      branchRate: safeFloat(pkg['@_branch-rate']) ?? 0,
+      branchRate: safeFloat(pkgBranchRate) ?? 0,
       complexity: safeFloat(pkg['@_complexity']) ?? 0
     }
     summary.packages.push(pkgCoverage)

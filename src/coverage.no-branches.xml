@@ -1,0 +1,5 @@
+<coverage line-rate="0.5" lines-covered="5" lines-valid="10">
+  <packages>
+    <package name="core" line-rate="0.5" />
+  </packages>
+</coverage>

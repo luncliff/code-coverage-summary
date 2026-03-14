@@ -1,0 +1,5 @@
+<coverage line-rate="0.5" lines-valid="100">
+  <packages>
+    <package name="core" line-rate="0.5" branch-rate="0.0" complexity="0" />
+  </packages>
+</coverage>

@@ -309,10 +309,10 @@ describe('generateMarkdownOutput precision', () => {
     expect(lines[0]).toBe('Package | Line Rate')
   })
 
-  test('failBelowMin note uses backtick-quoted percentage', () => {
+  test('failBelowMin note uses italic percentage', () => {
     const opts = makeOptions({ failBelowMin: true })
     const output = generateMarkdownOutput(makeSummary(), opts)
-    expect(output).toContain('_Minimum allowed line rate is `50%`_')
+    expect(output).toContain('_Minimum allowed line rate is 50%_')
   })
 })
 

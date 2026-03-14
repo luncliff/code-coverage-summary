@@ -204,7 +204,7 @@ export function generateMarkdownOutput(
 
   if (effectiveOptions.failBelowMin) {
     lines.push('')
-    lines.push(`_Minimum allowed line rate is \`${Math.round(effectiveOptions.thresholds.lower * 100)}%\`_`)
+    lines.push(`_Minimum allowed line rate is ${Math.round(effectiveOptions.thresholds.lower * 100)}%_`)
   }
 
   return lines.join('\n') + '\n'

@@ -42,51 +42,6 @@ This document breaks down the derived requirements from [project-requirements.md
 
 ---
 
-## G) Failure behavior and messages
-
-### SI-G1 — Unknown format error
-
-**Statement**: Unknown `format` values shall be treated as an error with a specific message.
-
-**Traceability**: FR-20
-
-**Acceptance criteria**:
-- Logs exactly: `Error: Unknown output format.`
-- Fails the step.
-
-### SI-G2 — Unknown output type error
-
-**Statement**: Unknown `output` values shall be treated as an error with a specific message.
-
-**Traceability**: FR-21
-
-**Acceptance criteria**:
-- Logs exactly: `Error: Unknown output type.`
-- Fails the step.
-
-### SI-G3 — Parsing error message contains filename
-
-**Statement**: Parsing failures shall include the filename in the log message.
-
-**Traceability**: FR-22
-
-**Acceptance criteria**:
-- Logs in the form: `Parsing Error: <message> - <filename>`.
-- Fails the step.
-
-### SI-G4 — Fail below threshold behavior
-
-**Statement**: When `fail_below_min=true`, the action shall (1) annotate the report with the minimum allowed line rate and (2) fail when summary line rate is below the lower threshold.
-
-**Traceability**: FR-19
-
-**Acceptance criteria**:
-- Text report includes: `Minimum allowed line rate is <lower>%`.
-- Markdown report includes the italicized line with the same information.
-- When summary line rate < lower threshold, logs the legacy failure message and fails the step.
-
----
-
 ## H) Non-functional specification items
 
 ### SI-N1 — Runtime and portability

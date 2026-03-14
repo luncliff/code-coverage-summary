@@ -27321,9 +27321,23 @@ function generateMarkdownOutput(summary, options) {
   lines.push(buildSummaryMarkdownRow(summary, effectiveOptions));
   if (effectiveOptions.failBelowMin) {
     lines.push("");
-    lines.push(`_Minimum allowed line rate is \`${Math.round(effectiveOptions.thresholds.lower * 100)}%\`_`);
+    lines.push(`_Minimum allowed line rate is ${Math.round(effectiveOptions.thresholds.lower * 100)}%_`);
   }
   return lines.join("\n") + "\n";
+}
+
+// src/input-validator.ts
+var VALID_FORMATS = ["text", "md", "markdown"];
+var VALID_OUTPUTS = ["console", "file", "both"];
+function validateFormat(format) {
+  if (!VALID_FORMATS.includes(format)) {
+    throw new Error("Error: Unknown output format.");
+  }
+}
+function validateOutput(output) {
+  if (!VALID_OUTPUTS.includes(output)) {
+    throw new Error("Error: Unknown output type.");
+  }
 }
 
 // src/index.ts
@@ -27343,6 +27357,18 @@ function parseInputs() {
 async function run() {
   try {
     const { badge, failBelowMin, format, hideBranchRate, hideComplexity, indicators, output, thresholdsInput, patterns } = parseInputs();
+    try {
+      validateFormat(format);
+    } catch (err) {
+      core.setFailed(err.message);
+      return;
+    }
+    try {
+      validateOutput(output);
+    } catch (err) {
+      core.setFailed(err.message);
+      return;
+    }
     const files = await discoverCoverageFiles(patterns);
     if (files.length === 0) {
       core.setFailed("Error: No files found matching glob pattern.");
@@ -27386,25 +27412,19 @@ async function run() {
     if (format === "text") {
       fileExt = "txt";
       outputText = generateTextOutput(summary, options);
-    } else if (format === "md" || format === "markdown") {
+    } else {
       fileExt = "md";
       outputText = generateMarkdownOutput(summary, options);
-    } else {
-      core.setFailed("Error: Unknown output format.");
-      return;
     }
     if (output === "console") {
       core.info("");
       core.info(outputText);
     } else if (output === "file") {
       fs2.writeFileSync(`code-coverage-results.${fileExt}`, outputText);
-    } else if (output === "both") {
+    } else {
       core.info("");
       core.info(outputText);
       fs2.writeFileSync(`code-coverage-results.${fileExt}`, outputText);
-    } else {
-      core.setFailed("Error: Unknown output type.");
-      return;
     }
     if (failBelowMin && summary.lineRate < thresholds.lower) {
       core.setFailed(

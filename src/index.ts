@@ -10,6 +10,7 @@ import {
   generateMarkdownOutput,
   OutputOptions
 } from './output-generator'
+import { validateFormat, validateOutput } from './input-validator'
 
 export interface ParsedInputs {
   filename: string
@@ -48,6 +49,21 @@ export function parseInputs(): ParsedInputs {
 export async function run(): Promise<void> {
   try {
     const { badge, failBelowMin, format, hideBranchRate, hideComplexity, indicators, output, thresholdsInput, patterns } = parseInputs()
+
+    // Validate inputs immediately (fail-fast before any file processing)
+    try {
+      validateFormat(format)
+    } catch (err) {
+      core.setFailed((err as Error).message)
+      return
+    }
+
+    try {
+      validateOutput(output)
+    } catch (err) {
+      core.setFailed((err as Error).message)
+      return
+    }
 
     // Resolve glob patterns — comma-separated list supported
     const files = await discoverCoverageFiles(patterns)
@@ -108,12 +124,10 @@ export async function run(): Promise<void> {
     if (format === 'text') {
       fileExt = 'txt'
       outputText = generateTextOutput(summary, options)
-    } else if (format === 'md' || format === 'markdown') {
+    } else {
+      // format is 'md' or 'markdown'
       fileExt = 'md'
       outputText = generateMarkdownOutput(summary, options)
-    } else {
-      core.setFailed('Error: Unknown output format.')
-      return
     }
 
     // Emit the output
@@ -122,13 +136,11 @@ export async function run(): Promise<void> {
       core.info(outputText)
     } else if (output === 'file') {
       fs.writeFileSync(`code-coverage-results.${fileExt}`, outputText)
-    } else if (output === 'both') {
+    } else {
+      // output is 'both'
       core.info('')
       core.info(outputText)
       fs.writeFileSync(`code-coverage-results.${fileExt}`, outputText)
-    } else {
-      core.setFailed('Error: Unknown output type.')
-      return
     }
 
     // Fail the action when coverage is below the lower threshold

@@ -17,11 +17,11 @@
 
 **Purpose**: Project initialization and test infrastructure setup
 
-- [ ] T001 Review existing test infrastructure in __tests__/ and verify Jest configuration in jest.config.js
-- [ ] T002 [P] Create test fixtures directory __tests__/fixtures/error-handling/ for error scenario test files
-- [ ] T003 [P] Create malformed XML fixture in __tests__/fixtures/error-handling/malformed.xml
-- [ ] T004 [P] Create missing attributes XML fixture in __tests__/fixtures/error-handling/missing-attributes.xml
-- [ ] T005 [P] Create valid coverage fixture in __tests__/fixtures/error-handling/valid-coverage.xml for success scenarios
+- [X] T001 Review existing test infrastructure in __tests__/ and verify Jest configuration in jest.config.js
+- [X] T002 [P] Create test fixtures directory __tests__/fixtures/error-handling/ for error scenario test files
+- [X] T003 [P] Create malformed XML fixture in __tests__/fixtures/error-handling/malformed.xml
+- [X] T004 [P] Create missing attributes XML fixture in __tests__/fixtures/error-handling/missing-attributes.xml
+- [X] T005 [P] Create valid coverage fixture in __tests__/fixtures/error-handling/valid-coverage.xml for success scenarios
 
 ---
 
@@ -31,9 +31,9 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Review SI-D4 threshold parsing implementation to understand lower threshold extraction
-- [ ] T007 Review SI-D2 summary line rate calculation to understand how summaryLineRate is computed
-- [ ] T008 Verify @actions/core package version (1.11.1) and confirm setFailed() availability
+- [X] T006 Review SI-D4 threshold parsing implementation to understand lower threshold extraction
+- [X] T007 Review SI-D2 summary line rate calculation to understand how summaryLineRate is computed
+- [X] T008 Verify @actions/core package version (1.11.1) and confirm setFailed() availability
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -49,24 +49,24 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T009 [P] [US1] Write test for valid format values ('text', 'md', 'markdown') in __tests__/input-validator.test.ts
-- [ ] T010 [P] [US1] Write test for invalid format value producing exact error "Error: Unknown output format." in __tests__/input-validator.test.ts
-- [ ] T011 [P] [US1] Write test for valid output values ('console', 'file', 'both') in __tests__/input-validator.test.ts
-- [ ] T012 [P] [US1] Write test for invalid output value producing exact error "Error: Unknown output type." in __tests__/input-validator.test.ts
-- [ ] T013 [US1] Run tests with `npm test -- __tests__/input-validator.test.ts` and verify all 4 tests FAIL (no implementation exists yet)
+- [X] T009 [P] [US1] Write test for valid format values ('text', 'md', 'markdown') in __tests__/input-validator.test.ts
+- [X] T010 [P] [US1] Write test for invalid format value producing exact error "Error: Unknown output format." in __tests__/input-validator.test.ts
+- [X] T011 [P] [US1] Write test for valid output values ('console', 'file', 'both') in __tests__/input-validator.test.ts
+- [X] T012 [P] [US1] Write test for invalid output value producing exact error "Error: Unknown output type." in __tests__/input-validator.test.ts
+- [X] T013 [US1] Run tests with `npm test -- __tests__/input-validator.test.ts` and verify all 4 tests FAIL (no implementation exists yet)
 
 ### Implementation for User Story 1
 
-- [ ] T014 [US1] Create src/input-validator.ts with validateFormat() function checking against ['text', 'md', 'markdown']
-- [ ] T015 [US1] Add validateOutput() function to src/input-validator.ts checking against ['console', 'file', 'both']
-- [ ] T016 [US1] Export validation functions with exact error messages from src/input-validator.ts
-- [ ] T017 [US1] Update src/index.ts to import validation functions after input retrieval
-- [ ] T018 [US1] Add format validation call in src/index.ts immediately after getInput('format')
-- [ ] T019 [US1] Add output validation call in src/index.ts immediately after getInput('output')
-- [ ] T020 [US1] Add core.setFailed() calls for validation failures in src/index.ts with exact error messages
-- [ ] T021 [US1] Run validation tests with `npm test -- __tests__/input-validator.test.ts` and verify all tests PASS
-- [ ] T022 [US1] Fix any failing tests by adjusting exact error message text or validation logic
-- [ ] T023 [US1] Test manual workflow with invalid format value and verify immediate failure (before file processing)
+- [X] T014 [US1] Create src/input-validator.ts with validateFormat() function checking against ['text', 'md', 'markdown']
+- [X] T015 [US1] Add validateOutput() function to src/input-validator.ts checking against ['console', 'file', 'both']
+- [X] T016 [US1] Export validation functions with exact error messages from src/input-validator.ts
+- [X] T017 [US1] Update src/index.ts to import validation functions after input retrieval
+- [X] T018 [US1] Add format validation call in src/index.ts immediately after getInput('format')
+- [X] T019 [US1] Add output validation call in src/index.ts immediately after getInput('output')
+- [X] T020 [US1] Add core.setFailed() calls for validation failures in src/index.ts with exact error messages
+- [X] T021 [US1] Run validation tests with `npm test -- __tests__/input-validator.test.ts` and verify all tests PASS
+- [X] T022 [US1] Fix any failing tests by adjusting exact error message text or validation logic
+- [X] T023 [US1] Test manual workflow with invalid format value and verify immediate failure (before file processing)
 
 **Checkpoint**: User Story 1 complete - input validation works independently, fails fast with exact error messages
 
@@ -82,25 +82,25 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T024 [P] [US2] Write test for parsing malformed XML producing "Parsing Error:" format in __tests__/parsing-errors.test.ts
-- [ ] T025 [P] [US2] Write test for parsing error message includes exact filename in __tests__/parsing-errors.test.ts
-- [ ] T026 [P] [US2] Write test for missing required attribute error message in __tests__/parsing-errors.test.ts
-- [ ] T027 [US2] Write test for multi-file parsing with fail-fast behavior in __tests__/parsing-errors.test.ts
-- [ ] T028 [US2] Write test verifying filename matches "Coverage File:" logged path in __tests__/parsing-errors.test.ts
-- [ ] T029 [US2] Run tests with `npm test -- __tests__/parsing-errors.test.ts` and verify all 5 tests FAIL
+- [X] T024 [P] [US2] Write test for parsing malformed XML producing "Parsing Error:" format in __tests__/parsing-errors.test.ts
+- [X] T025 [P] [US2] Write test for parsing error message includes exact filename in __tests__/parsing-errors.test.ts
+- [X] T026 [P] [US2] Write test for missing required attribute error message in __tests__/parsing-errors.test.ts
+- [X] T027 [US2] Write test for multi-file parsing with fail-fast behavior in __tests__/parsing-errors.test.ts
+- [X] T028 [US2] Write test verifying filename matches "Coverage File:" logged path in __tests__/parsing-errors.test.ts
+- [X] T029 [US2] Run tests with `npm test -- __tests__/parsing-errors.test.ts` and verify all 5 tests FAIL
 
 ### Implementation for User Story 2
 
-- [ ] T030 [US2] Update src/coverage-parser.ts to wrap parseFile() logic in try/catch block
-- [ ] T031 [US2] Add error message construction in catch block: "Parsing Error: ${descriptiveMessage} - ${filename}"
-- [ ] T032 [US2] Extract descriptive message from underlying parser error in src/coverage-parser.ts
-- [ ] T033 [US2] Ensure filename variable matches the path logged in "Coverage File:" output
-- [ ] T034 [US2] Add core.setFailed() call with formatted parsing error message in catch block
-- [ ] T035 [US2] Implement fail-fast behavior: return/exit immediately on parsing error (don't continue to next file)
-- [ ] T036 [US2] Run parsing error tests with `npm test -- __tests__/parsing-errors.test.ts` and verify all tests PASS
-- [ ] T037 [US2] Fix any failing tests by adjusting error message format or filename extraction
-- [ ] T038 [US2] Test with malformed.xml fixture and verify exact error format in console output
-- [ ] T039 [US2] Test multi-file scenario (valid.xml, malformed.xml, another-valid.xml) and verify processing stops at malformed.xml
+- [X] T030 [US2] Update src/coverage-parser.ts to wrap parseFile() logic in try/catch block
+- [X] T031 [US2] Add error message construction in catch block: "Parsing Error: ${descriptiveMessage} - ${filename}"
+- [X] T032 [US2] Extract descriptive message from underlying parser error in src/coverage-parser.ts
+- [X] T033 [US2] Ensure filename variable matches the path logged in "Coverage File:" output
+- [X] T034 [US2] Add core.setFailed() call with formatted parsing error message in catch block
+- [X] T035 [US2] Implement fail-fast behavior: return/exit immediately on parsing error (don't continue to next file)
+- [X] T036 [US2] Run parsing error tests with `npm test -- __tests__/parsing-errors.test.ts` and verify all tests PASS
+- [X] T037 [US2] Fix any failing tests by adjusting error message format or filename extraction
+- [X] T038 [US2] Test with malformed.xml fixture and verify exact error format in console output
+- [X] T039 [US2] Test multi-file scenario (valid.xml, malformed.xml, another-valid.xml) and verify processing stops at malformed.xml
 
 **Checkpoint**: User Story 2 complete - parsing errors include filenames, fail-fast works, error messages are exact
 
@@ -116,34 +116,34 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T040 [P] [US3] Write test for threshold annotation in text format in __tests__/threshold-enforcement.test.ts
-- [ ] T041 [P] [US3] Write test for threshold annotation in markdown format (italic) in __tests__/threshold-enforcement.test.ts
-- [ ] T042 [P] [US3] Write test for annotation appears when enforcement enabled in __tests__/threshold-enforcement.test.ts
-- [ ] T043 [P] [US3] Write test for no annotation when enforcement disabled in __tests__/threshold-enforcement.test.ts
-- [ ] T044 [P] [US3] Write test for threshold violation (coverage < threshold) produces exact failure message in __tests__/threshold-enforcement.test.ts
-- [ ] T045 [P] [US3] Write test for threshold pass (coverage >= threshold) with no failure in __tests__/threshold-enforcement.test.ts
-- [ ] T046 [P] [US3] Write test for boundary case (coverage exactly equals threshold) PASSES in __tests__/threshold-enforcement.test.ts
-- [ ] T047 [US3] Run tests with `npm test -- __tests__/threshold-enforcement.test.ts` and verify all 7 tests FAIL
+- [X] T040 [P] [US3] Write test for threshold annotation in text format in __tests__/threshold-enforcement.test.ts
+- [X] T041 [P] [US3] Write test for threshold annotation in markdown format (italic) in __tests__/threshold-enforcement.test.ts
+- [X] T042 [P] [US3] Write test for annotation appears when enforcement enabled in __tests__/threshold-enforcement.test.ts
+- [X] T043 [P] [US3] Write test for no annotation when enforcement disabled in __tests__/threshold-enforcement.test.ts
+- [X] T044 [P] [US3] Write test for threshold violation (coverage < threshold) produces exact failure message in __tests__/threshold-enforcement.test.ts
+- [X] T045 [P] [US3] Write test for threshold pass (coverage >= threshold) with no failure in __tests__/threshold-enforcement.test.ts
+- [X] T046 [P] [US3] Write test for boundary case (coverage exactly equals threshold) PASSES in __tests__/threshold-enforcement.test.ts
+- [X] T047 [US3] Run tests with `npm test -- __tests__/threshold-enforcement.test.ts` and verify all 7 tests FAIL
 
 ### Implementation for User Story 3
 
-- [ ] T048 [US3] Create src/threshold-enforcer.ts with isEnforcementEnabled() function checking fail_below_min === "true" (case-insensitive)
-- [ ] T049 [US3] Add generateAnnotation() function to src/threshold-enforcer.ts with format-specific text
-- [ ] T050 [US3] Implement text format annotation: "Minimum allowed line rate is ${lowerThreshold}%"
-- [ ] T051 [US3] Implement markdown format annotation: "_Minimum allowed line rate is ${lowerThreshold}%_"
-- [ ] T052 [US3] Add checkThresholdViolation() function comparing summaryLineRate < lowerThreshold
-- [ ] T053 [US3] Export all threshold enforcement functions from src/threshold-enforcer.ts
-- [ ] T054 [US3] Update src/output-generator.ts to import threshold enforcement functions
-- [ ] T055 [US3] Add annotation injection logic in src/output-generator.ts when enforcement enabled
-- [ ] T056 [US3] Ensure annotation is added before report string is returned from generator
-- [ ] T057 [US3] Update src/index.ts to perform threshold check after report generation
-- [ ] T058 [US3] Add core.setFailed() call for threshold violations with exact message format
-- [ ] T059 [US3] Ensure threshold check happens after report output (not before)
-- [ ] T060 [US3] Run threshold tests with `npm test -- __tests__/threshold-enforcement.test.ts` and verify all tests PASS
-- [ ] T061 [US3] Fix any failing tests by adjusting annotation format or comparison logic
-- [ ] T062 [US3] Test with coverage at 45% and threshold 60% - verify failure with exact message
-- [ ] T063 [US3] Test boundary case: coverage at 60% and threshold 60% - verify it PASSES (no false positive)
-- [ ] T064 [US3] Test with enforcement disabled (fail_below_min: 'false') - verify no annotation and no failure
+- [X] T048 [US3] Create src/threshold-enforcer.ts with isEnforcementEnabled() function checking fail_below_min === "true" (case-insensitive)
+- [X] T049 [US3] Add generateAnnotation() function to src/threshold-enforcer.ts with format-specific text
+- [X] T050 [US3] Implement text format annotation: "Minimum allowed line rate is ${lowerThreshold}%"
+- [X] T051 [US3] Implement markdown format annotation: "_Minimum allowed line rate is ${lowerThreshold}%_"
+- [X] T052 [US3] Add checkThresholdViolation() function comparing summaryLineRate < lowerThreshold
+- [X] T053 [US3] Export all threshold enforcement functions from src/threshold-enforcer.ts
+- [X] T054 [US3] Update src/output-generator.ts to import threshold enforcement functions
+- [X] T055 [US3] Add annotation injection logic in src/output-generator.ts when enforcement enabled
+- [X] T056 [US3] Ensure annotation is added before report string is returned from generator
+- [X] T057 [US3] Update src/index.ts to perform threshold check after report generation
+- [X] T058 [US3] Add core.setFailed() call for threshold violations with exact message format
+- [X] T059 [US3] Ensure threshold check happens after report output (not before)
+- [X] T060 [US3] Run threshold tests with `npm test -- __tests__/threshold-enforcement.test.ts` and verify all tests PASS
+- [X] T061 [US3] Fix any failing tests by adjusting annotation format or comparison logic
+- [X] T062 [US3] Test with coverage at 45% and threshold 60% - verify failure with exact message
+- [X] T063 [US3] Test boundary case: coverage at 60% and threshold 60% - verify it PASSES (no false positive)
+- [X] T064 [US3] Test with enforcement disabled (fail_below_min: 'false') - verify no annotation and no failure
 
 **Checkpoint**: User Story 3 complete - threshold enforcement works with annotations, boundary cases handled correctly
 
@@ -153,16 +153,16 @@
 
 **Goal**: Verify error handling works correctly across all scenarios and errors are reported in the correct priority order
 
-- [ ] T065 [P] Write integration test for input validation before parsing in __tests__/error-priority.test.ts
-- [ ] T066 [P] Write integration test for parsing error before threshold check in __tests__/error-priority.test.ts
-- [ ] T067 [P] Write integration test for threshold check after successful parsing in __tests__/error-priority.test.ts
-- [ ] T068 Write test for both invalid format and output (format error takes precedence) in __tests__/error-priority.test.ts
-- [ ] T069 Run integration tests with `npm test -- __tests__/error-priority.test.ts` and verify all pass
-- [ ] T070 Test complete workflow: invalid input → immediate failure (no files processed)
-- [ ] T071 Test complete workflow: valid input, parsing error → failure with filename
-- [ ] T072 Test complete workflow: valid input, valid parsing, threshold violation → annotated report + failure
-- [ ] T073 Test complete workflow: valid input, valid parsing, no enforcement → success
-- [ ] T074 Fix any integration issues discovered during end-to-end testing
+- [X] T065 [P] Write integration test for input validation before parsing in __tests__/error-priority.test.ts
+- [X] T066 [P] Write integration test for parsing error before threshold check in __tests__/error-priority.test.ts
+- [X] T067 [P] Write integration test for threshold check after successful parsing in __tests__/error-priority.test.ts
+- [X] T068 Write test for both invalid format and output (format error takes precedence) in __tests__/error-priority.test.ts
+- [X] T069 Run integration tests with `npm test -- __tests__/error-priority.test.ts` and verify all pass
+- [X] T070 Test complete workflow: invalid input → immediate failure (no files processed)
+- [X] T071 Test complete workflow: valid input, parsing error → failure with filename
+- [X] T072 Test complete workflow: valid input, valid parsing, threshold violation → annotated report + failure
+- [X] T073 Test complete workflow: valid input, valid parsing, no enforcement → success
+- [X] T074 Fix any integration issues discovered during end-to-end testing
 
 ---
 
@@ -170,11 +170,11 @@
 
 **Purpose**: Documentation, validation, and final quality checks
 
-- [ ] T075 [P] Update README.md error handling section with error message examples
-- [ ] T076 [P] Add troubleshooting guide section documenting each error type and resolution
-- [ ] T077 [P] Verify all error messages exactly match legacy text from specification
-- [ ] T078 Run complete test suite with `npm test` and verify all tests pass
-- [ ] T079 Build action with `npm run build` and verify dist/ is updated
+- [X] T075 [P] Update README.md error handling section with error message examples
+- [X] T076 [P] Add troubleshooting guide section documenting each error type and resolution
+- [X] T077 [P] Verify all error messages exactly match legacy text from specification
+- [X] T078 Run complete test suite with `npm test` and verify all tests pass
+- [X] T079 Build action with `npm run build` and verify dist/ is updated
 - [ ] T080 Test all 7 quickstart.md workflow examples manually
 - [ ] T081 Verify Example 1 (invalid format) produces exact error message
 - [ ] T082 Verify Example 2 (invalid output) produces exact error message

@@ -27374,13 +27374,22 @@ function routeReport(report, format, outputMode) {
       } catch (writeError) {
         error = writeError.message;
         core.setFailed(error);
-        throw writeError;
+        return {
+          logged,
+          fileWritten: false,
+          error
+        };
       }
     }
   } catch (err) {
     if (!error) {
       error = err.message;
     }
+    return {
+      logged,
+      fileWritten,
+      error
+    };
   }
   return {
     logged,

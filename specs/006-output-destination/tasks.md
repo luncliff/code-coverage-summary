@@ -100,10 +100,10 @@
 
 **Purpose**: Keep the repo consistent and ensure the tasks fully support the plan’s quality gates.
 
-- [ ] T023 [P] Align quickstart examples with final behavior in specs/006-output-destination/quickstart.md
-- [ ] T024 [P] Ensure contract stays accurate (filenames + report-vs-diagnostic logging note) in specs/006-output-destination/contracts/action-output-destination.md
-- [ ] T025 Run unit tests and confirm green: update expectations if needed in __tests__/output-destination.test.ts
-- [ ] T026 Run `npm run build` and ensure `dist/index.js` output remains correct (entry still `src/index.ts`)
+- [x] T023 [P] Align quickstart examples with final behavior in specs/006-output-destination/quickstart.md
+- [x] T024 [P] Ensure contract stays accurate (filenames + report-vs-diagnostic logging note) in specs/006-output-destination/contracts/action-output-destination.md
+- [x] T025 Run unit tests and confirm green: update expectations if needed in __tests__/output-destination.test.ts
+- [x] T026 Run `npm run build` and ensure `dist/index.js` output remains correct (entry still `src/index.ts`)
 
 
 ---

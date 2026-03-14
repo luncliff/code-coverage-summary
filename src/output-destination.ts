@@ -15,14 +15,14 @@ export type ReportFormat = 'text' | 'md'
  * Result of routing a report to its destination(s).
  */
 export interface RouteResult {
-  /** Whether the report was logged to console */
-  logged: boolean
-  /** Whether the report was written to file */
-  fileWritten: boolean
-  /** The filename used if written to file */
-  filename?: string
-  /** Any error that occurred during routing */
-  error?: string
+    /** Whether the report was logged to console */
+    logged: boolean
+    /** Whether the report was written to file */
+    fileWritten: boolean
+    /** The filename used if written to file */
+    filename?: string
+    /** Any error that occurred during routing */
+    error?: string
 }
 
 /**
@@ -43,57 +43,57 @@ export interface RouteResult {
  * - markdown format: code-coverage-results.md
  */
 export function routeReport(
-  report: string,
-  format: ReportFormat,
-  outputMode: OutputMode
+    report: string,
+    format: ReportFormat,
+    outputMode: OutputMode
 ): RouteResult {
-  const fileExt = format === 'text' ? 'txt' : 'md'
-  const filename = `code-coverage-results.${fileExt}`
+    const fileExt = format === 'text' ? 'txt' : 'md'
+    const filename = `code-coverage-results.${fileExt}`
 
-  let logged = false
-  let fileWritten = false
-  let error: string | undefined
+    let logged = false
+    let fileWritten = false
+    let error: string | undefined
 
-  try {
-    // Log to console if requested
-    if (outputMode === 'console' || outputMode === 'both') {
-      core.info('')
-      core.info(report)
-      logged = true
-    }
-
-    // Write to file if requested
-    if (outputMode === 'file' || outputMode === 'both') {
-      try {
-        fs.writeFileSync(filename, report)
-        fileWritten = true
-      } catch (writeError) {
-        error = (writeError as Error).message
-        core.setFailed(error)
-        return {
-          logged,
-          fileWritten: false,
-          error
+    try {
+        // Log to console if requested
+        if (outputMode === 'console' || outputMode === 'both') {
+            core.info('')
+            core.info(report)
+            logged = true
         }
-      }
-    }
-  } catch (err) {
-    if (!error) {
-      error = (err as Error).message
-    }
-    return {
-      logged,
-      fileWritten,
-      error
-    }
-  }
 
-  return {
-    logged,
-    fileWritten,
-    filename: fileWritten ? filename : undefined,
-    error
-  }
+        // Write to file if requested
+        if (outputMode === 'file' || outputMode === 'both') {
+            try {
+                fs.writeFileSync(filename, report)
+                fileWritten = true
+            } catch (writeError) {
+                error = (writeError as Error).message
+                core.setFailed(error)
+                return {
+                    logged,
+                    fileWritten: false,
+                    error
+                }
+            }
+        }
+    } catch (err) {
+        if (!error) {
+            error = (err as Error).message
+        }
+        return {
+            logged,
+            fileWritten,
+            error
+        }
+    }
+
+    return {
+        logged,
+        fileWritten,
+        filename: fileWritten ? filename : undefined,
+        error
+    }
 }
 
 /**
@@ -103,6 +103,6 @@ export function routeReport(
  * @returns The legacy filename for that format
  */
 export function getReportFilename(format: ReportFormat): string {
-  const fileExt = format === 'text' ? 'txt' : 'md'
-  return `code-coverage-results.${fileExt}`
+    const fileExt = format === 'text' ? 'txt' : 'md'
+    return `code-coverage-results.${fileExt}`
 }

@@ -14,6 +14,8 @@ export interface OutputOptions {
   failBelowMin: boolean
 }
 
+const THRESHOLD_ADJUSTMENT = 10
+
 export function parseThresholds(thresholds: string): ThresholdConfig {
   const trimmed = thresholds.trim()
   if (!trimmed) {
@@ -44,7 +46,7 @@ export function parseThresholds(thresholds: string): ThresholdConfig {
   upperPct = clampPct(upperPct)
 
   if (lowerPct > upperPct) {
-    upperPct = clampPct(lowerPct + 10)
+    upperPct = clampPct(lowerPct + THRESHOLD_ADJUSTMENT)
   }
 
   const lower = lowerPct / 100

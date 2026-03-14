@@ -116,12 +116,12 @@ describe('parseCoverageFile', () => {
   })
 
   test('aggregates totals and averages root rates across multiple fixtures', () => {
-    const fileA = path.join(FIXTURES_DIR, 'coverage.aggregate-a.xml')
-    const fileB = path.join(FIXTURES_DIR, 'coverage.aggregate-b.xml')
+    const aggregateFixtureA = path.join(FIXTURES_DIR, 'coverage.aggregate-a.xml')
+    const aggregateFixtureB = path.join(FIXTURES_DIR, 'coverage.aggregate-b.xml')
     let summary = createEmptySummary()
 
-    summary = parseCoverageFile(fileA, summary)
-    summary = parseCoverageFile(fileB, summary)
+    summary = parseCoverageFile(aggregateFixtureA, summary)
+    summary = parseCoverageFile(aggregateFixtureB, summary)
 
     expect(summary.linesCovered).toBe(10)
     expect(summary.linesValid).toBe(20)

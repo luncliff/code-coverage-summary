@@ -83,9 +83,15 @@ jobs:
           output: 'console'
           thresholds: '50 75'
 
-      - name: "Remove tested coverage XML files"
+      - name: "Remove tested/invalid coverage XML files"
         run: |
-          rm src/coverage.aggregate-*.xml
+          rm src/coverage.aggregate-*.xml # tested
+          # no information
+          rm src/coverage.invalid-root.xml
+          rm src/coverage.missing-root.xml
+          rm src/coverage.no-branches.xml
+          rm src/coverage.no-packages.xml
+          rm src/coverage.unnamed-packages.xml
         shell: bash
 
       - name: "Test Action — markdown output"

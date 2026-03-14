@@ -30,6 +30,8 @@ Code Coverage Summary is compatible with [StepSecurity Secure Workflows](https:/
 
 A comma separated list of code coverage files to analyse. Also supports using glob patterns to match multiple files. If there are any spaces in a path or filename this value must be in quotes.
 
+When multiple coverage files are provided, covered/valid counts and complexity are summed across files while line and branch rates are calculated as an unweighted average of each file’s root rate.
+
 
 ### `badge`
 
@@ -57,6 +59,8 @@ Output Format - `markdown` or `text` (default).
 ### `hide_branch_rate`
 
 Hide Branch Rate metrics in the output - `true` or `false` (default).
+
+Branch columns are also automatically suppressed when branch metrics are absent or all zeros, even if `hide_branch_rate` is `false`.
 
 
 ### `hide_complexity`
@@ -91,6 +95,8 @@ Output Type - `console` (default), `file` or `both`.
 ### `thresholds`
 
 Lower and upper threshold percentages for badge and health indicators, lower threshold can also be used to fail the action. Separate the values with a space and enclose them in quotes; default `'50 75'`.
+
+Threshold values are clamped to the 0–100 range. If the lower threshold exceeds the upper threshold, the upper threshold is adjusted to be 10 points higher (clamped to 100).
 
 
 ## Outputs

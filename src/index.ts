@@ -74,12 +74,16 @@ export async function run(): Promise<void> {
     }
 
     // Divide aggregated rates by the number of files (matches C# behaviour)
-    summary.lineRate /= files.length
-    summary.branchRate /= files.length
+    if (summary.fileCount > 0) {
+      summary.lineRate /= summary.fileCount
+    }
+    if (summary.branchFileCount > 0) {
+      summary.branchRate /= summary.branchFileCount
+    }
 
     // Suppress branch rate column when no branch metrics are present
     const effectiveHideBranchRate =
-      hideBranchRate || !summary.branchMetricsPresent
+      hideBranchRate || !summary.branchMetricsPresent || summary.branchFileCount === 0
 
     // Parse threshold config
     let thresholds

@@ -34,12 +34,21 @@ export function parseThresholds(thresholds: string): ThresholdConfig {
     if (isNaN(upperPct)) throw new Error('Threshold parameter set incorrectly.')
   }
 
-  let lower = lowerPct / 100
-  let upper = upperPct / 100
+  const clampPct = (value: number): number => {
+    if (value < 0) return 0
+    if (value > 100) return 100
+    return value
+  }
 
-  if (lower > 1.0) lower = 1.0
-  if (lower > upper) upper = lower + 0.1
-  if (upper > 1.0) upper = 1.0
+  lowerPct = clampPct(lowerPct)
+  upperPct = clampPct(upperPct)
+
+  if (lowerPct > upperPct) {
+    upperPct = clampPct(lowerPct + 10)
+  }
+
+  const lower = lowerPct / 100
+  const upper = upperPct / 100
 
   return { lower, upper }
 }
@@ -61,6 +70,7 @@ export function generateBadgeUrl(
 }
 
 function hasBranchData(summary: CoverageSummary): boolean {
+  if (!summary.branchMetricsPresent) return false
   return summary.branchRate !== 0 || summary.branchesCovered !== 0 || summary.branchesValid !== 0
 }
 

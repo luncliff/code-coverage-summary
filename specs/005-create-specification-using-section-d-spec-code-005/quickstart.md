@@ -30,10 +30,10 @@ INPUT_BADGE=true \
 node dist/index.js
 ```
 
-To test multi-file aggregation, provide a comma-separated list or glob patterns:
+To test multi-file aggregation with deterministic fixtures, provide a comma-separated list or glob patterns:
 
 ```bash
-INPUT_FILENAME="src/coverage.cobertura.xml,src/coverage.gcovr.xml" node dist/index.js
+INPUT_FILENAME="src/coverage.aggregate-a.xml,src/coverage.aggregate-b.xml" node dist/index.js
 ```
 
 The output will print to the console by default or write to `code-coverage-results.txt`/`code-coverage-results.md` if `INPUT_OUTPUT=file` or `both` is provided.

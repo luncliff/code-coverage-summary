@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage line-rate="0.6" branch-rate="0.8" lines-covered="6" lines-valid="10" branches-covered="8" branches-valid="10" complexity="0.0" timestamp="0" version="test">
+  <packages>
+    <package name="Aggregate.B" line-rate="0.6" branch-rate="0.8" complexity="7">
+      <classes/>
+    </package>
+  </packages>
+</coverage>

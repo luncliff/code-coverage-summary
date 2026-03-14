@@ -24,7 +24,7 @@ description: "Task list for Coverage Aggregation & Threshold Classification"
 
 **Purpose**: Add deterministic fixtures needed for aggregation regression tests.
 
-- [ ] T001 Add deterministic Cobertura fixtures for aggregation tests in src/coverage.aggregate-a.xml and src/coverage.aggregate-b.xml
+- [X] T001 Add deterministic Cobertura fixtures for aggregation tests in src/coverage.aggregate-a.xml and src/coverage.aggregate-b.xml
 
 ---
 
@@ -34,7 +34,7 @@ description: "Task list for Coverage Aggregation & Threshold Classification"
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 Update CoverageSummary and createEmptySummary to track fileCount and branchFileCount for averaging in src/coverage-parser.ts
+- [X] T002 Update CoverageSummary and createEmptySummary to track fileCount and branchFileCount for averaging in src/coverage-parser.ts
 
 **Checkpoint**: Foundation ready - user story implementation can now begin.
 
@@ -48,12 +48,12 @@ description: "Task list for Coverage Aggregation & Threshold Classification"
 
 ### Tests for User Story 1
 
-- [ ] T003 [US1] Add multi-file aggregation regression test using coverage.aggregate fixtures in __tests__/coverage-parser.test.ts
+- [X] T003 [US1] Add multi-file aggregation regression test using coverage.aggregate fixtures in __tests__/coverage-parser.test.ts
 
 ### Implementation for User Story 1
 
-- [ ] T004 [P] [US1] Update parseCoverageFile to increment fileCount/branchFileCount and accumulate per-file root rates and counts in src/coverage-parser.ts
-- [ ] T005 [P] [US1] Update aggregation in src/index.ts to compute lineRate averages from fileCount and branchRate averages from branchFileCount while preserving summed totals in src/index.ts
+- [X] T004 [P] [US1] Update parseCoverageFile to increment fileCount/branchFileCount and accumulate per-file root rates and counts in src/coverage-parser.ts
+- [X] T005 [P] [US1] Update aggregation in src/index.ts to compute lineRate averages from fileCount and branchRate averages from branchFileCount while preserving summed totals in src/index.ts
 
 **Checkpoint**: User Story 1 is fully functional and independently testable.
 
@@ -67,12 +67,12 @@ description: "Task list for Coverage Aggregation & Threshold Classification"
 
 ### Tests for User Story 2
 
-- [ ] T006 [US2] Add branch-suppression regression tests for zero branch metrics in __tests__/output-generator.test.ts
+- [X] T006 [US2] Add branch-suppression regression tests for zero branch metrics in __tests__/output-generator.test.ts
 
 ### Implementation for User Story 2
 
-- [ ] T007 [P] [US2] Update branch output suppression to honor branchMetricsPresent plus zero totals in src/output-generator.ts
-- [ ] T008 [P] [US2] Adjust effective hideBranchRate calculation for branchMetricsPresent/branchFileCount logic in src/index.ts
+- [X] T007 [P] [US2] Update branch output suppression to honor branchMetricsPresent plus zero totals in src/output-generator.ts
+- [X] T008 [P] [US2] Adjust effective hideBranchRate calculation for branchMetricsPresent/branchFileCount logic in src/index.ts
 
 **Checkpoint**: User Story 2 is fully functional and independently testable.
 
@@ -86,11 +86,11 @@ description: "Task list for Coverage Aggregation & Threshold Classification"
 
 ### Tests for User Story 3
 
-- [ ] T009 [US3] Extend threshold parsing and badge classification tests for negative/out-of-range and lower>upper cases in __tests__/output-generator.test.ts
+- [X] T009 [US3] Extend threshold parsing and badge classification tests for negative/out-of-range and lower>upper cases in __tests__/output-generator.test.ts
 
 ### Implementation for User Story 3
 
-- [ ] T010 [US3] Update parseThresholds to clamp inputs to 0–1, handle negatives, and enforce upper-adjustment rules in src/output-generator.ts
+- [X] T010 [US3] Update parseThresholds to clamp inputs to 0–1, handle negatives, and enforce upper-adjustment rules in src/output-generator.ts
 
 **Checkpoint**: User Story 3 is fully functional and independently testable.
 
@@ -100,8 +100,8 @@ description: "Task list for Coverage Aggregation & Threshold Classification"
 
 **Purpose**: Documentation updates and validation across stories.
 
-- [ ] T011 [P] Update aggregation, branch suppression, and threshold parsing notes in README-original.md
-- [ ] T012 [P] Validate and update the multi-file example in specs/005-create-specification-using-section-d-spec-code-005/quickstart.md
+- [X] T011 [P] Update aggregation, branch suppression, and threshold parsing notes in README-original.md
+- [X] T012 [P] Validate and update the multi-file example in specs/005-create-specification-using-section-d-spec-code-005/quickstart.md
 
 ---
 

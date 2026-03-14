@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!-- Platform test fixture: Unix-style paths -->
+<coverage line-rate="0.80" branch-rate="0.70" lines-covered="80" lines-valid="100" branches-covered="70" branches-valid="100" complexity="5" version="1.0" timestamp="0">
+  <packages>
+    <package name="UnixPackage" line-rate="0.80" branch-rate="0.70" complexity="5">
+      <classes>
+        <class name="UnixClass" filename="/home/user/projects/myapp/src/test.js" line-rate="0.80" branch-rate="0.70" complexity="5">
+          <methods/>
+          <lines>
+            <line number="1" hits="1" branch="false"/>
+            <line number="2" hits="1" branch="false"/>
+            <line number="3" hits="0" branch="false"/>
+          </lines>
+        </class>
+      </classes>
+    </package>
+  </packages>
+</coverage>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE coverage [
+  <!ENTITY xxe SYSTEM "file:///etc/passwd">
+]>
+<!-- XXE Attack Payload - Should NOT be executed by parser -->
+<coverage line-rate="0.75" branch-rate="0.5">
+  <packages>
+    <package name="&xxe;" line-rate="0.75">
+      <classes>
+        <class name="TestClass" filename="test.js" line-rate="0.75">
+          <methods/>
+          <lines>
+            <line number="1" hits="1"/>
+          </lines>
+        </class>
+      </classes>
+    </package>
+  </packages>
+</coverage>

@@ -9,5 +9,13 @@ module.exports = {
   collectCoverage: false,
   coverageDirectory: 'coverage',
   coverageReporters: ['lcov', 'text'],
-  collectCoverageFrom: ['src/**/*.ts', '!src/CodeCoverageSummary/**']
+  collectCoverageFrom: ['src/**/*.ts', '!src/CodeCoverageSummary/**'],
+  coverageThreshold: {
+    global: {
+      lines: 80,
+      branches: 80,
+      functions: 80,
+      statements: 80
+    }
+  }
 }

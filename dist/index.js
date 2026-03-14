@@ -19053,12 +19053,12 @@ var init_lib = __esm({
             throw new Error("Client has already been disposed.");
           }
           const parsedUrl = new URL(requestUrl);
-          let info2 = this._prepareRequest(verb, parsedUrl, headers);
+          let info3 = this._prepareRequest(verb, parsedUrl, headers);
           const maxTries = this._allowRetries && RetryableHttpVerbs.includes(verb) ? this._maxRetries + 1 : 1;
           let numTries = 0;
           let response;
           do {
-            response = yield this.requestRaw(info2, data);
+            response = yield this.requestRaw(info3, data);
             if (response && response.message && response.message.statusCode === HttpCodes.Unauthorized) {
               let authenticationHandler;
               for (const handler of this.handlers) {
@@ -19068,7 +19068,7 @@ var init_lib = __esm({
                 }
               }
               if (authenticationHandler) {
-                return authenticationHandler.handleAuthentication(this, info2, data);
+                return authenticationHandler.handleAuthentication(this, info3, data);
               } else {
                 return response;
               }
@@ -19091,8 +19091,8 @@ var init_lib = __esm({
                   }
                 }
               }
-              info2 = this._prepareRequest(verb, parsedRedirectUrl, headers);
-              response = yield this.requestRaw(info2, data);
+              info3 = this._prepareRequest(verb, parsedRedirectUrl, headers);
+              response = yield this.requestRaw(info3, data);
               redirectsRemaining--;
             }
             if (!response.message.statusCode || !HttpResponseRetryCodes.includes(response.message.statusCode)) {
@@ -19121,7 +19121,7 @@ var init_lib = __esm({
        * @param info
        * @param data
        */
-      requestRaw(info2, data) {
+      requestRaw(info3, data) {
         return __awaiter(this, void 0, void 0, function* () {
           return new Promise((resolve, reject) => {
             function callbackForResult(err, res) {
@@ -19133,7 +19133,7 @@ var init_lib = __esm({
                 resolve(res);
               }
             }
-            this.requestRawWithCallback(info2, data, callbackForResult);
+            this.requestRawWithCallback(info3, data, callbackForResult);
           });
         });
       }
@@ -19143,12 +19143,12 @@ var init_lib = __esm({
        * @param data
        * @param onResult
        */
-      requestRawWithCallback(info2, data, onResult) {
+      requestRawWithCallback(info3, data, onResult) {
         if (typeof data === "string") {
-          if (!info2.options.headers) {
-            info2.options.headers = {};
+          if (!info3.options.headers) {
+            info3.options.headers = {};
           }
-          info2.options.headers["Content-Length"] = Buffer.byteLength(data, "utf8");
+          info3.options.headers["Content-Length"] = Buffer.byteLength(data, "utf8");
         }
         let callbackCalled = false;
         function handleResult(err, res) {
@@ -19157,7 +19157,7 @@ var init_lib = __esm({
             onResult(err, res);
           }
         }
-        const req = info2.httpModule.request(info2.options, (msg) => {
+        const req = info3.httpModule.request(info3.options, (msg) => {
           const res = new HttpClientResponse(msg);
           handleResult(void 0, res);
         });
@@ -19169,7 +19169,7 @@ var init_lib = __esm({
           if (socket) {
             socket.end();
           }
-          handleResult(new Error(`Request timeout: ${info2.options.path}`));
+          handleResult(new Error(`Request timeout: ${info3.options.path}`));
         });
         req.on("error", function(err) {
           handleResult(err);
@@ -19205,27 +19205,27 @@ var init_lib = __esm({
         return this._getProxyAgentDispatcher(parsedUrl, proxyUrl);
       }
       _prepareRequest(method, requestUrl, headers) {
-        const info2 = {};
-        info2.parsedUrl = requestUrl;
-        const usingSsl = info2.parsedUrl.protocol === "https:";
-        info2.httpModule = usingSsl ? https : http;
+        const info3 = {};
+        info3.parsedUrl = requestUrl;
+        const usingSsl = info3.parsedUrl.protocol === "https:";
+        info3.httpModule = usingSsl ? https : http;
         const defaultPort = usingSsl ? 443 : 80;
-        info2.options = {};
-        info2.options.host = info2.parsedUrl.hostname;
-        info2.options.port = info2.parsedUrl.port ? parseInt(info2.parsedUrl.port) : defaultPort;
-        info2.options.path = (info2.parsedUrl.pathname || "") + (info2.parsedUrl.search || "");
-        info2.options.method = method;
-        info2.options.headers = this._mergeHeaders(headers);
+        info3.options = {};
+        info3.options.host = info3.parsedUrl.hostname;
+        info3.options.port = info3.parsedUrl.port ? parseInt(info3.parsedUrl.port) : defaultPort;
+        info3.options.path = (info3.parsedUrl.pathname || "") + (info3.parsedUrl.search || "");
+        info3.options.method = method;
+        info3.options.headers = this._mergeHeaders(headers);
         if (this.userAgent != null) {
-          info2.options.headers["user-agent"] = this.userAgent;
+          info3.options.headers["user-agent"] = this.userAgent;
         }
-        info2.options.agent = this._getAgent(info2.parsedUrl);
+        info3.options.agent = this._getAgent(info3.parsedUrl);
         if (this.handlers) {
           for (const handler of this.handlers) {
-            handler.prepareRequest(info2.options);
+            handler.prepareRequest(info3.options);
           }
         }
-        return info2;
+        return info3;
       }
       _mergeHeaders(headers) {
         if (this.requestOptions && this.requestOptions.headers) {
@@ -21252,11 +21252,11 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       (0, command_1.issue)("echo", enabled ? "on" : "off");
     }
     exports2.setCommandEcho = setCommandEcho;
-    function setFailed2(message) {
+    function setFailed3(message) {
       process.exitCode = ExitCode.Failure;
       error(message);
     }
-    exports2.setFailed = setFailed2;
+    exports2.setFailed = setFailed3;
     function isDebug() {
       return process.env["RUNNER_DEBUG"] === "1";
     }
@@ -21277,10 +21277,10 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       (0, command_1.issueCommand)("notice", (0, utils_1.toCommandProperties)(properties), message instanceof Error ? message.toString() : message);
     }
     exports2.notice = notice;
-    function info2(message) {
+    function info3(message) {
       process.stdout.write(message + os.EOL);
     }
-    exports2.info = info2;
+    exports2.info = info3;
     function startGroup(name) {
       (0, command_1.issue)("group", name);
     }
@@ -23275,13 +23275,13 @@ var require_core2 = __commonJS({
     exports2.getBooleanInput = getBooleanInput;
     exports2.setOutput = setOutput;
     exports2.setCommandEcho = setCommandEcho;
-    exports2.setFailed = setFailed2;
+    exports2.setFailed = setFailed3;
     exports2.isDebug = isDebug;
     exports2.debug = debug;
     exports2.error = error;
     exports2.warning = warning;
     exports2.notice = notice;
-    exports2.info = info2;
+    exports2.info = info3;
     exports2.startGroup = startGroup;
     exports2.endGroup = endGroup;
     exports2.group = group;
@@ -23359,7 +23359,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
     function setCommandEcho(enabled) {
       (0, command_1.issue)("echo", enabled ? "on" : "off");
     }
-    function setFailed2(message) {
+    function setFailed3(message) {
       process.exitCode = ExitCode.Failure;
       error(message);
     }
@@ -23378,7 +23378,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
     function notice(message, properties = {}) {
       (0, command_1.issueCommand)("notice", (0, utils_1.toCommandProperties)(properties), message instanceof Error ? message.toString() : message);
     }
-    function info2(message) {
+    function info3(message) {
       process.stdout.write(message + os.EOL);
     }
     function startGroup(name) {
@@ -23479,7 +23479,7 @@ var require_internal_glob_options_helper = __commonJS({
     })();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getOptions = getOptions;
-    var core2 = __importStar(require_core2());
+    var core3 = __importStar(require_core2());
     function getOptions(copy) {
       const result = {
         followSymbolicLinks: true,
@@ -23491,23 +23491,23 @@ var require_internal_glob_options_helper = __commonJS({
       if (copy) {
         if (typeof copy.followSymbolicLinks === "boolean") {
           result.followSymbolicLinks = copy.followSymbolicLinks;
-          core2.debug(`followSymbolicLinks '${result.followSymbolicLinks}'`);
+          core3.debug(`followSymbolicLinks '${result.followSymbolicLinks}'`);
         }
         if (typeof copy.implicitDescendants === "boolean") {
           result.implicitDescendants = copy.implicitDescendants;
-          core2.debug(`implicitDescendants '${result.implicitDescendants}'`);
+          core3.debug(`implicitDescendants '${result.implicitDescendants}'`);
         }
         if (typeof copy.matchDirectories === "boolean") {
           result.matchDirectories = copy.matchDirectories;
-          core2.debug(`matchDirectories '${result.matchDirectories}'`);
+          core3.debug(`matchDirectories '${result.matchDirectories}'`);
         }
         if (typeof copy.omitBrokenSymbolicLinks === "boolean") {
           result.omitBrokenSymbolicLinks = copy.omitBrokenSymbolicLinks;
-          core2.debug(`omitBrokenSymbolicLinks '${result.omitBrokenSymbolicLinks}'`);
+          core3.debug(`omitBrokenSymbolicLinks '${result.omitBrokenSymbolicLinks}'`);
         }
         if (typeof copy.excludeHiddenFiles === "boolean") {
           result.excludeHiddenFiles = copy.excludeHiddenFiles;
-          core2.debug(`excludeHiddenFiles '${result.excludeHiddenFiles}'`);
+          core3.debug(`excludeHiddenFiles '${result.excludeHiddenFiles}'`);
         }
       }
       return result;
@@ -25138,7 +25138,7 @@ var require_internal_globber = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DefaultGlobber = void 0;
-    var core2 = __importStar(require_core2());
+    var core3 = __importStar(require_core2());
     var fs3 = __importStar(require("fs"));
     var globOptionsHelper = __importStar(require_internal_glob_options_helper());
     var path3 = __importStar(require("path"));
@@ -25191,7 +25191,7 @@ var require_internal_globber = __commonJS({
           }
           const stack = [];
           for (const searchPath of patternHelper.getSearchPaths(patterns)) {
-            core2.debug(`Search path '${searchPath}'`);
+            core3.debug(`Search path '${searchPath}'`);
             try {
               yield __await(fs3.promises.lstat(searchPath));
             } catch (err) {
@@ -25266,7 +25266,7 @@ var require_internal_globber = __commonJS({
             } catch (err) {
               if (err.code === "ENOENT") {
                 if (options.omitBrokenSymbolicLinks) {
-                  core2.debug(`Broken symlink '${item.path}'`);
+                  core3.debug(`Broken symlink '${item.path}'`);
                   return void 0;
                 }
                 throw new Error(`No information found for the path '${item.path}'. This may indicate a broken symbolic link.`);
@@ -25282,7 +25282,7 @@ var require_internal_globber = __commonJS({
               traversalChain.pop();
             }
             if (traversalChain.some((x) => x === realPath)) {
-              core2.debug(`Symlink cycle detected for path '${item.path}' and realpath '${realPath}'`);
+              core3.debug(`Symlink cycle detected for path '${item.path}' and realpath '${realPath}'`);
               return void 0;
             }
             traversalChain.push(realPath);
@@ -25385,7 +25385,7 @@ var require_internal_hash_files = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.hashFiles = hashFiles;
     var crypto = __importStar(require("crypto"));
-    var core2 = __importStar(require_core2());
+    var core3 = __importStar(require_core2());
     var fs3 = __importStar(require("fs"));
     var stream = __importStar(require("stream"));
     var util = __importStar(require("util"));
@@ -25394,7 +25394,7 @@ var require_internal_hash_files = __commonJS({
       return __awaiter3(this, arguments, void 0, function* (globber, currentWorkspace, verbose = false) {
         var _a, e_1, _b, _c;
         var _d;
-        const writeDelegate = verbose ? core2.info : core2.debug;
+        const writeDelegate = verbose ? core3.info : core3.debug;
         let hasMatch = false;
         const githubWorkspace = currentWorkspace ? currentWorkspace : (_d = process.env["GITHUB_WORKSPACE"]) !== null && _d !== void 0 ? _d : process.cwd();
         const result = crypto.createHash("sha256");
@@ -25505,8 +25505,7 @@ __export(index_exports, {
   run: () => run
 });
 module.exports = __toCommonJS(index_exports);
-var core = __toESM(require_core());
-var fs2 = __toESM(require("fs"));
+var core2 = __toESM(require_core());
 var path2 = __toESM(require("path"));
 
 // node_modules/fast-xml-parser/src/util.js
@@ -27353,17 +27352,55 @@ function validateOutput(output) {
   }
 }
 
+// src/output-destination.ts
+var core = __toESM(require_core());
+var fs2 = __toESM(require("fs"));
+function routeReport(report, format, outputMode) {
+  const fileExt = format === "text" ? "txt" : "md";
+  const filename = `code-coverage-results.${fileExt}`;
+  let logged = false;
+  let fileWritten = false;
+  let error;
+  try {
+    if (outputMode === "console" || outputMode === "both") {
+      core.info("");
+      core.info(report);
+      logged = true;
+    }
+    if (outputMode === "file" || outputMode === "both") {
+      try {
+        fs2.writeFileSync(filename, report);
+        fileWritten = true;
+      } catch (writeError) {
+        error = writeError.message;
+        core.setFailed(error);
+        throw writeError;
+      }
+    }
+  } catch (err) {
+    if (!error) {
+      error = err.message;
+    }
+  }
+  return {
+    logged,
+    fileWritten,
+    filename: fileWritten ? filename : void 0,
+    error
+  };
+}
+
 // src/index.ts
 function parseInputs() {
-  const filename = core.getInput("filename", { required: true });
-  const badge = core.getInput("badge").toLowerCase() === "true";
-  const failBelowMin = core.getInput("fail_below_min").toLowerCase() === "true";
-  const format = core.getInput("format").toLowerCase() || "text";
-  const hideBranchRate = core.getInput("hide_branch_rate").toLowerCase() === "true";
-  const hideComplexity = core.getInput("hide_complexity").toLowerCase() === "true";
-  const indicators = core.getInput("indicators").toLowerCase() === "true";
-  const output = core.getInput("output").toLowerCase() || "console";
-  const thresholdsInput = core.getInput("thresholds") || "50 75";
+  const filename = core2.getInput("filename", { required: true });
+  const badge = core2.getInput("badge").toLowerCase() === "true";
+  const failBelowMin = core2.getInput("fail_below_min").toLowerCase() === "true";
+  const format = core2.getInput("format").toLowerCase() || "text";
+  const hideBranchRate = core2.getInput("hide_branch_rate").toLowerCase() === "true";
+  const hideComplexity = core2.getInput("hide_complexity").toLowerCase() === "true";
+  const indicators = core2.getInput("indicators").toLowerCase() === "true";
+  const output = core2.getInput("output").toLowerCase() || "console";
+  const thresholdsInput = core2.getInput("thresholds") || "50 75";
   const patterns = filename.split(",").map((p) => p.trim()).filter((p) => p.length > 0);
   return { filename, badge, failBelowMin, format, hideBranchRate, hideComplexity, indicators, output, thresholdsInput, patterns };
 }
@@ -27374,23 +27411,23 @@ async function run() {
       validateFormat(format);
       validateOutput(output);
     } catch (err) {
-      core.setFailed(err.message);
+      core2.setFailed(err.message);
       return;
     }
     const files = await discoverCoverageFiles(patterns);
     if (files.length === 0) {
-      core.setFailed("Error: No files found matching glob pattern.");
+      core2.setFailed("Error: No files found matching glob pattern.");
       return;
     }
     let summary = createEmptySummary();
     for (const file of files) {
-      core.info(`Coverage File: ${file}`);
+      core2.info(`Coverage File: ${file}`);
       try {
         summary = parseCoverageFile(file, summary);
       } catch (err) {
         const relativePath = path2.relative(process.cwd(), file);
         const displayPath = relativePath || path2.basename(file);
-        core.setFailed(
+        core2.setFailed(
           `Parsing Error: ${err.message} - ${displayPath}`
         );
         return;
@@ -27407,7 +27444,7 @@ async function run() {
     try {
       thresholds = parseThresholds(thresholdsInput);
     } catch (err) {
-      core.setFailed(`Error: ${err.message}`);
+      core2.setFailed(`Error: ${err.message}`);
       return;
     }
     const badgeUrl = badge ? generateBadgeUrl(summary, thresholds) : null;
@@ -27420,31 +27457,20 @@ async function run() {
       failBelowMin
     };
     let outputText;
-    let fileExt;
     if (format === "text") {
-      fileExt = "txt";
       outputText = generateTextOutput(summary, options);
     } else {
-      fileExt = "md";
       outputText = generateMarkdownOutput(summary, options);
     }
-    if (output === "console") {
-      core.info("");
-      core.info(outputText);
-    } else if (output === "file") {
-      fs2.writeFileSync(`code-coverage-results.${fileExt}`, outputText);
-    } else {
-      core.info("");
-      core.info(outputText);
-      fs2.writeFileSync(`code-coverage-results.${fileExt}`, outputText);
-    }
+    const formatMode = format === "text" ? "text" : "md";
+    routeReport(outputText, formatMode, output);
     if (failBelowMin && summary.lineRate < thresholds.lower) {
-      core.setFailed(
+      core2.setFailed(
         `FAIL: Overall line rate below minimum threshold of ${Math.round(thresholds.lower * 100)}%.`
       );
     }
   } catch (error) {
-    core.setFailed(`Error: ${error.message}`);
+    core2.setFailed(`Error: ${error.message}`);
   }
 }
 run();

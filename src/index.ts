@@ -1,5 +1,4 @@
 import * as core from '@actions/core'
-import * as fs from 'fs'
 import * as path from 'path'
 import { createEmptySummary, parseCoverageFile, CoverageSummary } from './coverage-parser'
 import { discoverCoverageFiles } from './file-discovery'
@@ -11,6 +10,7 @@ import {
   OutputOptions
 } from './output-generator'
 import { validateFormat, validateOutput } from './input-validator'
+import { routeReport } from './output-destination'
 
 export interface ParsedInputs {
   filename: string
@@ -118,26 +118,15 @@ export async function run(): Promise<void> {
 
     // Build the formatted output string
     let outputText: string
-    let fileExt: string
     if (format === 'text') {
-      fileExt = 'txt'
       outputText = generateTextOutput(summary, options)
     } else {
-      fileExt = 'md'
       outputText = generateMarkdownOutput(summary, options)
     }
 
-    // Emit the output
-    if (output === 'console') {
-      core.info('')
-      core.info(outputText)
-    } else if (output === 'file') {
-      fs.writeFileSync(`code-coverage-results.${fileExt}`, outputText)
-    } else {
-      core.info('')
-      core.info(outputText)
-      fs.writeFileSync(`code-coverage-results.${fileExt}`, outputText)
-    }
+    // Route the report to its destination(s)
+    const formatMode = format === 'text' ? 'text' : 'md'
+    routeReport(outputText, formatMode, output as 'console' | 'file' | 'both')
 
     // Fail the action when coverage is below the lower threshold
     if (failBelowMin && summary.lineRate < thresholds.lower) {

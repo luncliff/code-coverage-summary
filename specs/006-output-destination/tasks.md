@@ -26,9 +26,9 @@
 
 **Purpose**: Make output destination behavior independently testable without requiring XML parsing/globbing.
 
-- [ ] T006 Create a focused output routing helper in src/output-destination.ts
-- [ ] T007 Update src/index.ts to call the helper for `console|file|both` routing
-- [ ] T008 [P] Add unit tests for the helper’s file naming logic in __tests__/output-destination.test.ts
+- [x] T006 Create a focused output routing helper in src/output-destination.ts
+- [x] T007 Update src/index.ts to call the helper for `console|file|both` routing
+- [x] T008 [P] Add unit tests for the helper's file naming logic in __tests__/output-destination.test.ts
 
 **Checkpoint**: Output routing is encapsulated and unit-testable.
 
@@ -42,13 +42,13 @@
 
 ### Tests for User Story 1
 
-- [ ] T009 [P] [US1] Add test: `output=console` does not call `fs.writeFileSync` in __tests__/output-destination.test.ts
-- [ ] T010 [P] [US1] Add test: `output=console` emits the report content to `core.info` in __tests__/output-destination.test.ts
-- [ ] T011 [P] [US1] Add test: `output=console` does not modify an existing report file in __tests__/output-destination.test.ts
+- [x] T009 [P] [US1] Add test: `output=console` does not call `fs.writeFileSync` in __tests__/output-destination.test.ts
+- [x] T010 [P] [US1] Add test: `output=console` emits the report content to `core.info` in __tests__/output-destination.test.ts
+- [x] T011 [P] [US1] Add test: `output=console` does not modify an existing report file in __tests__/output-destination.test.ts
 
 ### Implementation for User Story 1
 
-- [ ] T012 [US1] Implement/adjust `console` routing semantics in src/output-destination.ts (if needed)
+- [x] T012 [US1] Implement/adjust `console` routing semantics in src/output-destination.ts (if needed)
 
 **Checkpoint**: US1 behavior is fully covered by unit tests and passes.
 
@@ -62,16 +62,16 @@
 
 ### Tests for User Story 2
 
-- [ ] T013 [P] [US2] Add test: `output=file` writes `code-coverage-results.txt` when `format=text` in __tests__/output-destination.test.ts
-- [ ] T014 [P] [US2] Add test: `output=file` writes `code-coverage-results.md` when `format=markdown` in __tests__/output-destination.test.ts
-- [ ] T015 [P] [US2] Add test: `output=file` does not emit report content to `core.info` in __tests__/output-destination.test.ts
-- [ ] T016 [P] [US2] Add test: file contents exactly equal the provided report string in __tests__/output-destination.test.ts
-- [ ] T017 [P] [US2] Add test: file write failure triggers `core.setFailed` in __tests__/output-destination.test.ts
-- [ ] T018 [P] [US2] Add test: file output content equals console output content for the same report string in __tests__/output-destination.test.ts
+- [x] T013 [P] [US2] Add test: `output=file` writes `code-coverage-results.txt` when `format=text` in __tests__/output-destination.test.ts
+- [x] T014 [P] [US2] Add test: `output=file` writes `code-coverage-results.md` when `format=markdown` in __tests__/output-destination.test.ts
+- [x] T015 [P] [US2] Add test: `output=file` does not emit report content to `core.info` in __tests__/output-destination.test.ts
+- [x] T016 [P] [US2] Add test: file contents exactly equal the provided report string in __tests__/output-destination.test.ts
+- [x] T017 [P] [US2] Add test: file write failure triggers `core.setFailed` in __tests__/output-destination.test.ts
+- [x] T018 [P] [US2] Add test: file output content equals console output content for the same report string in __tests__/output-destination.test.ts
 
 ### Implementation for User Story 2
 
-- [ ] T019 [US2] Implement/adjust `file` routing semantics and error handling in src/output-destination.ts
+- [x] T019 [US2] Implement/adjust `file` routing semantics and error handling in src/output-destination.ts
 
 **Checkpoint**: US2 file output and error paths are covered and pass.
 
@@ -85,12 +85,12 @@
 
 ### Tests for User Story 3
 
-- [ ] T020 [P] [US3] Add test: `output=both` emits report content to `core.info` in __tests__/output-destination.test.ts
-- [ ] T021 [P] [US3] Add test: `output=both` writes the correct legacy filename for `text|markdown` in __tests__/output-destination.test.ts
+- [x] T020 [P] [US3] Add test: `output=both` emits report content to `core.info` in __tests__/output-destination.test.ts
+- [x] T021 [P] [US3] Add test: `output=both` writes the correct legacy filename for `text|markdown` in __tests__/output-destination.test.ts
 
 ### Implementation for User Story 3
 
-- [ ] T022 [US3] Implement/adjust `both` routing semantics in src/output-destination.ts (if needed)
+- [x] T022 [US3] Implement/adjust `both` routing semantics in src/output-destination.ts (if needed)
 
 **Checkpoint**: US3 behavior passes and remains independent of parsing/discovery.
 

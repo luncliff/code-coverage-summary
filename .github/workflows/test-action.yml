@@ -2,13 +2,11 @@ name: Test TypeScript Action
 
 on:
   push:
-    branches: [master]
+    branches-ignore:
+      - 'docs/**'
+      - 'gh-pages'
   pull_request:
-    branches: [master]
   workflow_dispatch:
-
-permissions:
-  contents: read
 
 jobs:
   unit-tests:
@@ -18,56 +16,53 @@ jobs:
       contents: read
       pull-requests: read
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js 24
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: "Install/Test"
+        run: |
+          npm ci
+          npm run test:coverage
 
-      - name: Run unit tests with coverage
-        run: npm run test:coverage
+      - name: Build
+        run: |
+          npm run build
 
-      - name: Build dist
-        run: npm run build
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v7.0.0
+      - uses: SonarSource/sonarqube-scan-action@v7.0.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   test-action:
-    name: Test Action (${{ matrix.os }}, Node.js ${{ matrix.node-version }})
+    name: "Test Action (${{ matrix.os }}, Node.js ${{ matrix.node-version }})"
     runs-on: ${{ matrix.os }}
     needs: unit-tests
+    permissions:
+      contents: read
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         node-version: ['20', '24']
+      fail-fast: false
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: "Install/Build"
+        run: |
+          npm install
+          npm run build
 
-      - name: Build dist
-        run: npm run build
-
-      - name: Test Action — text output
+      - name: "Test Action — text output"
         uses: ./
         with:
           filename: 'src/coverage.cobertura.xml'
@@ -76,7 +71,12 @@ jobs:
           output: 'console'
           thresholds: '60 80'
 
-      - name: Test Action — markdown output
+      - name: "Remove invalid coverage XML" # exclude the file for next step
+        run: |
+          rm src/coverage.invalid-root.xml
+        shell: bash
+
+      - name: "Test Action — markdown output"
         uses: ./
         with:
           filename: 'src/coverage.*.xml'
@@ -87,4 +87,3 @@ jobs:
           indicators: 'true'
           output: 'console'
           thresholds: '50 75'
-

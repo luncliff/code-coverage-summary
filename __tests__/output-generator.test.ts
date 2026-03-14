@@ -18,6 +18,8 @@ function makeSummary(overrides: Partial<CoverageSummary> = {}): CoverageSummary 
     branchesValid: 378,
     complexity: 671,
     branchMetricsPresent: true,
+    fileCount: 1,
+    branchFileCount: 1,
     packages: [
       { name: 'MyPackage', lineRate: 0.83, branchRate: 0.69, complexity: 671 }
     ],
@@ -56,9 +58,21 @@ describe('parseThresholds', () => {
     expect(t.lower).toBe(1.0)
   })
 
+  test('clamps negative and out-of-range thresholds', () => {
+    const t = parseThresholds('-10 120')
+    expect(t.lower).toBe(0)
+    expect(t.upper).toBe(1.0)
+  })
+
   test('adjusts upper when lower exceeds upper', () => {
     const t = parseThresholds('90 70')
     expect(t.lower).toBeCloseTo(0.9, 5)
+    expect(t.upper).toBeCloseTo(1.0, 5)
+  })
+
+  test('adjusts upper after clamping when lower exceeds upper', () => {
+    const t = parseThresholds('95 20')
+    expect(t.lower).toBeCloseTo(0.95, 5)
     expect(t.upper).toBeCloseTo(1.0, 5)
   })
 
@@ -84,6 +98,13 @@ describe('generateBadgeUrl', () => {
   test('returns success badge when above upper threshold', () => {
     const summary = makeSummary({ lineRate: 0.9 })
     expect(generateBadgeUrl(summary, thresholds)).toContain('success')
+  })
+
+  test('treats lower bound as warning and upper bound as success', () => {
+    const lowerSummary = makeSummary({ lineRate: 0.5 })
+    const upperSummary = makeSummary({ lineRate: 0.75 })
+    expect(generateBadgeUrl(lowerSummary, thresholds)).toContain('yellow')
+    expect(generateBadgeUrl(upperSummary, thresholds)).toContain('success')
   })
 
   test('includes correct coverage percentage', () => {
@@ -115,6 +136,19 @@ describe('generateTextOutput', () => {
   test('hides branch rate when configured', () => {
     const opts = makeOptions({ hideBranchRate: true })
     const text = generateTextOutput(makeSummary(), opts)
+    expect(text).not.toContain('Branch Rate')
+  })
+
+  test('hides branch rate when branch metrics are zero', () => {
+    const summary = makeSummary({
+      branchRate: 0,
+      branchesCovered: 0,
+      branchesValid: 0,
+      branchMetricsPresent: true,
+      branchFileCount: 1
+    })
+    const opts = makeOptions({ hideBranchRate: false })
+    const text = generateTextOutput(summary, opts)
     expect(text).not.toContain('Branch Rate')
   })
 
@@ -158,6 +192,19 @@ describe('generateMarkdownOutput', () => {
   test('hides branch rate column when configured', () => {
     const opts = makeOptions({ hideBranchRate: true })
     const text = generateMarkdownOutput(makeSummary(), opts)
+    expect(text).not.toContain('Branch Rate')
+  })
+
+  test('hides branch rate column when branch metrics are zero', () => {
+    const summary = makeSummary({
+      branchRate: 0,
+      branchesCovered: 0,
+      branchesValid: 0,
+      branchMetricsPresent: true,
+      branchFileCount: 1
+    })
+    const opts = makeOptions({ hideBranchRate: false })
+    const text = generateMarkdownOutput(summary, opts)
     expect(text).not.toContain('Branch Rate')
   })
 

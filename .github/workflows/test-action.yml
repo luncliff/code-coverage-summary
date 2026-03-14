@@ -71,8 +71,22 @@ jobs:
           output: 'console'
           thresholds: '60 80'
 
-      - name: "Remove test fixture coverage XML files" # exclude test fixtures from glob test
+      - name: "Test Action — markdown output"
+        uses: ./
+        with:
+          filename: 'src/coverage.aggregate-*.xml'
+          badge: 'true'
+          fail_below_min: 'false'
+          format: 'markdown'
+          hide_complexity: 'true'
+          indicators: 'true'
+          output: 'console'
+          thresholds: '50 75'
+
+      - name: "Remove tested/invalid coverage XML files"
         run: |
+          rm src/coverage.aggregate-*.xml # tested
+          # no information
           rm src/coverage.invalid-root.xml
           rm src/coverage.missing-root.xml
           rm src/coverage.no-branches.xml

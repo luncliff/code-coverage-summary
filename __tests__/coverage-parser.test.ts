@@ -114,4 +114,23 @@ describe('parseCoverageFile', () => {
     )
     expect(hasNamedPackage).toBe(true)
   })
+
+  test('aggregates totals and averages root rates across multiple fixtures', () => {
+    const aggregateFixtureA = path.join(FIXTURES_DIR, 'coverage.aggregate-a.xml')
+    const aggregateFixtureB = path.join(FIXTURES_DIR, 'coverage.aggregate-b.xml')
+    let summary = createEmptySummary()
+
+    summary = parseCoverageFile(aggregateFixtureA, summary)
+    summary = parseCoverageFile(aggregateFixtureB, summary)
+
+    expect(summary.linesCovered).toBe(10)
+    expect(summary.linesValid).toBe(20)
+    expect(summary.branchesCovered).toBe(10)
+    expect(summary.branchesValid).toBe(20)
+    expect(summary.complexity).toBe(10)
+    expect(summary.fileCount).toBe(2)
+    expect(summary.branchFileCount).toBe(2)
+    expect(summary.lineRate).toBeCloseTo(1.0, 5)
+    expect(summary.branchRate).toBeCloseTo(1.0, 5)
+  })
 })

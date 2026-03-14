@@ -18,6 +18,8 @@ export interface CoverageSummary {
   branchesValid: number
   complexity: number
   branchMetricsPresent: boolean
+  fileCount: number
+  branchFileCount: number
   packages: PackageCoverage[]
 }
 
@@ -31,6 +33,8 @@ export function createEmptySummary(): CoverageSummary {
     branchesValid: 0,
     complexity: 0,
     branchMetricsPresent: false,
+    fileCount: 0,
+    branchFileCount: 0,
     packages: []
   }
 }
@@ -71,6 +75,7 @@ export function parseCoverageFile(
   const lineRate = safeFloat(coverage['@_line-rate'])
   if (lineRate === null) throw new Error('Overall line rate not found')
   summary.lineRate += lineRate
+  summary.fileCount += 1
 
   const linesCovered = safeInt(coverage['@_lines-covered'])
   if (linesCovered === null) throw new Error('Overall lines covered not found')
@@ -90,6 +95,7 @@ export function parseCoverageFile(
 
   if (rootBranchMetricsPresent) {
     summary.branchMetricsPresent = true
+    summary.branchFileCount += 1
     summary.branchRate += safeFloat(branchRateStr) ?? 0
     summary.branchesCovered += safeInt(branchesCoveredStr) ?? 0
     summary.branchesValid += safeInt(branchesValidStr) ?? 0

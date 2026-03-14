@@ -27101,6 +27101,8 @@ function createEmptySummary() {
     branchesValid: 0,
     complexity: 0,
     branchMetricsPresent: false,
+    fileCount: 0,
+    branchFileCount: 0,
     packages: []
   };
 }
@@ -27131,6 +27133,7 @@ function parseCoverageFile(filename, summary) {
   const lineRate = safeFloat(coverage["@_line-rate"]);
   if (lineRate === null) throw new Error("Overall line rate not found");
   summary.lineRate += lineRate;
+  summary.fileCount += 1;
   const linesCovered = safeInt(coverage["@_lines-covered"]);
   if (linesCovered === null) throw new Error("Overall lines covered not found");
   summary.linesCovered += linesCovered;
@@ -27143,6 +27146,7 @@ function parseCoverageFile(filename, summary) {
   const rootBranchMetricsPresent = branchRateStr !== void 0 || branchesCoveredStr !== void 0 || branchesValidStr !== void 0;
   if (rootBranchMetricsPresent) {
     summary.branchMetricsPresent = true;
+    summary.branchFileCount += 1;
     summary.branchRate += safeFloat(branchRateStr) ?? 0;
     summary.branchesCovered += safeInt(branchesCoveredStr) ?? 0;
     summary.branchesValid += safeInt(branchesValidStr) ?? 0;
@@ -27190,6 +27194,7 @@ async function discoverCoverageFiles(patterns) {
 }
 
 // src/output-generator.ts
+var THRESHOLD_ADJUSTMENT = 10;
 function parseThresholds(thresholds) {
   const trimmed = thresholds.trim();
   if (!trimmed) {
@@ -27207,11 +27212,18 @@ function parseThresholds(thresholds) {
     upperPct = parseInt(trimmed.substring(spaceIdx + 1), 10);
     if (isNaN(upperPct)) throw new Error("Threshold parameter set incorrectly.");
   }
-  let lower = lowerPct / 100;
-  let upper = upperPct / 100;
-  if (lower > 1) lower = 1;
-  if (lower > upper) upper = lower + 0.1;
-  if (upper > 1) upper = 1;
+  const clampPct = (value) => {
+    if (value < 0) return 0;
+    if (value > 100) return 100;
+    return value;
+  };
+  lowerPct = clampPct(lowerPct);
+  upperPct = clampPct(upperPct);
+  if (lowerPct > upperPct) {
+    upperPct = clampPct(lowerPct + THRESHOLD_ADJUSTMENT);
+  }
+  const lower = lowerPct / 100;
+  const upper = upperPct / 100;
   return { lower, upper };
 }
 function generateBadgeUrl(summary, thresholds) {
@@ -27227,6 +27239,7 @@ function generateBadgeUrl(summary, thresholds) {
   return `https://img.shields.io/badge/Code%20Coverage-${pct}%25-${colour}?style=flat`;
 }
 function hasBranchData(summary) {
+  if (!summary.branchMetricsPresent) return false;
   return summary.branchRate !== 0 || summary.branchesCovered !== 0 || summary.branchesValid !== 0;
 }
 function healthIndicator(rate, thresholds) {
@@ -27362,9 +27375,13 @@ async function run() {
         return;
       }
     }
-    summary.lineRate /= files.length;
-    summary.branchRate /= files.length;
-    const effectiveHideBranchRate = hideBranchRate || !summary.branchMetricsPresent;
+    if (summary.fileCount > 0) {
+      summary.lineRate /= summary.fileCount;
+    }
+    if (summary.branchFileCount > 0) {
+      summary.branchRate /= summary.branchFileCount;
+    }
+    const effectiveHideBranchRate = hideBranchRate || !summary.branchMetricsPresent || summary.branchFileCount === 0;
     let thresholds;
     try {
       thresholds = parseThresholds(thresholdsInput);

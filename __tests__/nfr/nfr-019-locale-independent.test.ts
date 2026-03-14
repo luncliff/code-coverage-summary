@@ -61,7 +61,7 @@ describe('NFR-019: Locale-Independent Formatting', () => {
     const output = generateTextOutput(summary, options)
 
     // Should use English format (dot for decimal, % for percent)
-    expect(output).toContain('87%') // Should be percentage format
+    expect(output).toContain('88%') // Should be percentage format (87.65% rounds to 88%)
 
     // Should NOT use comma as decimal separator
     expect(output).not.toMatch(/\d+,\d+%/)
@@ -136,7 +136,7 @@ describe('NFR-019: Locale-Independent Formatting', () => {
     }
 
     const thresholds = { lower: 0.5, upper: 0.75 }
-    const badgeUrl = generateBadgeUrl(summary.lineRate, thresholds)
+    const badgeUrl = generateBadgeUrl(summary, thresholds)
 
     // Badge URL should always use integer percentage
     expect(badgeUrl).toContain('77%25') // 76.54% rounds to 77%

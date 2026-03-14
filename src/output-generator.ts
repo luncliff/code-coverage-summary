@@ -60,6 +60,10 @@ export function generateBadgeUrl(
   return `https://img.shields.io/badge/Code%20Coverage-${pct}%25-${colour}?style=flat`
 }
 
+function hasBranchData(summary: CoverageSummary): boolean {
+  return summary.branchRate !== 0 || summary.branchesCovered !== 0 || summary.branchesValid !== 0
+}
+
 function healthIndicator(rate: number, thresholds: ThresholdConfig): string {
   if (rate < thresholds.lower) return '❌'
   if (rate < thresholds.upper) return '➖'
@@ -101,21 +105,25 @@ export function generateTextOutput(
   summary: CoverageSummary,
   options: OutputOptions
 ): string {
+  const effectiveOptions: OutputOptions = {
+    ...options,
+    hideBranchRate: options.hideBranchRate || !hasBranchData(summary)
+  }
   const lines: string[] = []
 
-  if (options.badgeUrl) {
-    lines.push(options.badgeUrl)
+  if (effectiveOptions.badgeUrl) {
+    lines.push(effectiveOptions.badgeUrl)
     lines.push('')
   }
 
   for (const pkg of summary.packages) {
-    lines.push(buildPackageTextLine(pkg, options))
+    lines.push(buildPackageTextLine(pkg, effectiveOptions))
   }
 
-  lines.push(buildSummaryTextLine(summary, options))
+  lines.push(buildSummaryTextLine(summary, effectiveOptions))
 
-  if (options.failBelowMin) {
-    lines.push(`Minimum allowed line rate is ${Math.round(options.thresholds.lower * 100)}%`)
+  if (effectiveOptions.failBelowMin) {
+    lines.push(`Minimum allowed line rate is ${Math.round(effectiveOptions.thresholds.lower * 100)}%`)
   }
 
   return lines.join('\n') + '\n'
@@ -148,24 +156,28 @@ export function generateMarkdownOutput(
   summary: CoverageSummary,
   options: OutputOptions
 ): string {
+  const effectiveOptions: OutputOptions = {
+    ...options,
+    hideBranchRate: options.hideBranchRate || !hasBranchData(summary)
+  }
   const lines: string[] = []
 
-  if (options.badgeUrl) {
-    lines.push(`![Code Coverage](${options.badgeUrl})`)
+  if (effectiveOptions.badgeUrl) {
+    lines.push(`![Code Coverage](${effectiveOptions.badgeUrl})`)
     lines.push('')
   }
 
   let header = 'Package | Line Rate'
   let separator = '-------- | ---------'
-  if (!options.hideBranchRate) {
+  if (!effectiveOptions.hideBranchRate) {
     header += ' | Branch Rate'
     separator += ' | -----------'
   }
-  if (!options.hideComplexity) {
+  if (!effectiveOptions.hideComplexity) {
     header += ' | Complexity'
     separator += ' | ----------'
   }
-  if (options.indicators) {
+  if (effectiveOptions.indicators) {
     header += ' | Health'
     separator += ' | ------'
   }
@@ -173,14 +185,14 @@ export function generateMarkdownOutput(
   lines.push(separator)
 
   for (const pkg of summary.packages) {
-    lines.push(buildPackageMarkdownRow(pkg, options))
+    lines.push(buildPackageMarkdownRow(pkg, effectiveOptions))
   }
 
-  lines.push(buildSummaryMarkdownRow(summary, options))
+  lines.push(buildSummaryMarkdownRow(summary, effectiveOptions))
 
-  if (options.failBelowMin) {
+  if (effectiveOptions.failBelowMin) {
     lines.push('')
-    lines.push(`_Minimum allowed line rate is \`${Math.round(options.thresholds.lower * 100)}%\`_`)
+    lines.push(`_Minimum allowed line rate is \`${Math.round(effectiveOptions.thresholds.lower * 100)}%\`_`)
   }
 
   return lines.join('\n') + '\n'

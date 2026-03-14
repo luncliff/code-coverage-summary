@@ -27359,11 +27359,6 @@ async function run() {
     const { badge, failBelowMin, format, hideBranchRate, hideComplexity, indicators, output, thresholdsInput, patterns } = parseInputs();
     try {
       validateFormat(format);
-    } catch (err) {
-      core.setFailed(err.message);
-      return;
-    }
-    try {
       validateOutput(output);
     } catch (err) {
       core.setFailed(err.message);

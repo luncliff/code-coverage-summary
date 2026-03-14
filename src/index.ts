@@ -53,12 +53,6 @@ export async function run(): Promise<void> {
     // Validate inputs immediately (fail-fast before any file processing)
     try {
       validateFormat(format)
-    } catch (err) {
-      core.setFailed((err as Error).message)
-      return
-    }
-
-    try {
       validateOutput(output)
     } catch (err) {
       core.setFailed((err as Error).message)
@@ -125,7 +119,6 @@ export async function run(): Promise<void> {
       fileExt = 'txt'
       outputText = generateTextOutput(summary, options)
     } else {
-      // format is 'md' or 'markdown'
       fileExt = 'md'
       outputText = generateMarkdownOutput(summary, options)
     }
@@ -137,7 +130,6 @@ export async function run(): Promise<void> {
     } else if (output === 'file') {
       fs.writeFileSync(`code-coverage-results.${fileExt}`, outputText)
     } else {
-      // output is 'both'
       core.info('')
       core.info(outputText)
       fs.writeFileSync(`code-coverage-results.${fileExt}`, outputText)

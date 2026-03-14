@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import * as fs from 'fs'
+import * as path from 'path'
 import { createEmptySummary, parseCoverageFile, CoverageSummary } from './coverage-parser'
 import { discoverCoverageFiles } from './file-discovery'
 import {
@@ -63,14 +64,13 @@ export async function run(): Promise<void> {
       try {
         summary = parseCoverageFile(file, summary)
       } catch (err) {
-        core.setFailed(`Parsing Error: ${(err as Error).message} - ${file}`)
+        const relativePath = path.relative(process.cwd(), file)
+        const displayPath = relativePath || path.basename(file)
+        core.setFailed(
+          `Parsing Error: ${(err as Error).message} - ${displayPath}`
+        )
         return
       }
-    }
-
-    if (summary.packages.length === 0) {
-      core.setFailed('Parsing Error: No packages found in coverage files.')
-      return
     }
 
     // Divide aggregated rates by the number of files (matches C# behaviour)
@@ -79,10 +79,7 @@ export async function run(): Promise<void> {
 
     // Suppress branch rate column when no branch metrics are present
     const effectiveHideBranchRate =
-      hideBranchRate ||
-      (summary.branchRate === 0 &&
-        summary.branchesCovered === 0 &&
-        summary.branchesValid === 0)
+      hideBranchRate || !summary.branchMetricsPresent
 
     // Parse threshold config
     let thresholds

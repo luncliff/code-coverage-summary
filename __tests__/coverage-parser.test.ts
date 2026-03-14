@@ -15,6 +15,55 @@ describe('parseCoverageFile', () => {
     expect(summary.packages.length).toBeGreaterThan(0)
   })
 
+  test('throws when required root attributes are missing', () => {
+    const file = path.join(FIXTURES_DIR, 'coverage.missing-root.xml')
+    expect(() => parseCoverageFile(file, createEmptySummary())).toThrow(
+      'Overall lines covered not found'
+    )
+  })
+
+  test('throws when required root attributes are invalid', () => {
+    const file = path.join(FIXTURES_DIR, 'coverage.invalid-root.xml')
+    expect(() => parseCoverageFile(file, createEmptySummary())).toThrow(
+      'Overall line rate not found'
+    )
+  })
+
+  test('parses a Cobertura file without branch metrics', () => {
+    const file = path.join(FIXTURES_DIR, 'coverage.no-branches.xml')
+    const summary = parseCoverageFile(file, createEmptySummary())
+
+    expect(summary.lineRate).toBeCloseTo(0.5, 5)
+    expect(summary.branchRate).toBe(0)
+    expect(summary.branchesCovered).toBe(0)
+    expect(summary.branchesValid).toBe(0)
+    expect(summary.branchMetricsPresent).toBe(false)
+    expect(summary.packages.length).toBeGreaterThan(0)
+  })
+
+  test('parses a Cobertura file with no packages', () => {
+    const file = path.join(FIXTURES_DIR, 'coverage.no-packages.xml')
+    const summary = parseCoverageFile(file, createEmptySummary())
+
+    expect(summary.lineRate).toBeCloseTo(0.5, 5)
+    expect(summary.packages).toHaveLength(0)
+  })
+
+  test('uses fallback names and defaults for unnamed packages', () => {
+    const file = path.join(FIXTURES_DIR, 'coverage.unnamed-packages.xml')
+    const summary = parseCoverageFile(file, createEmptySummary())
+
+    expect(summary.packages).toHaveLength(2)
+    expect(summary.packages[0].name).toBe('coverage.unnamed-packages Package 1')
+    expect(summary.packages[1].name).toBe('coverage.unnamed-packages Package 2')
+    expect(summary.packages[0].lineRate).toBe(0)
+    expect(summary.packages[0].branchRate).toBe(0)
+    expect(summary.packages[0].complexity).toBe(0)
+    expect(summary.packages[1].lineRate).toBe(0)
+    expect(summary.packages[1].branchRate).toBe(0)
+    expect(summary.packages[1].complexity).toBe(0)
+  })
+
   test('parses a gcovr Cobertura XML file with DOCTYPE declaration', () => {
     const file = path.join(FIXTURES_DIR, 'coverage.gcovr.xml')
     const summary = parseCoverageFile(file, createEmptySummary())

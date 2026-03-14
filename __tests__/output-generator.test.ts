@@ -17,6 +17,7 @@ function makeSummary(overrides: Partial<CoverageSummary> = {}): CoverageSummary 
     branchesCovered: 262,
     branchesValid: 378,
     complexity: 671,
+    branchMetricsPresent: true,
     packages: [
       { name: 'MyPackage', lineRate: 0.83, branchRate: 0.69, complexity: 671 }
     ],

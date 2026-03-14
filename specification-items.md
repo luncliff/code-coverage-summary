@@ -8,40 +8,6 @@ This document breaks down the derived requirements from [project-requirements.md
 
 ---
 
-## F) Output destination
-
-### SI-F1 — Console output
-
-**Statement**: When `output=console`, the report shall be written to the action log.
-
-**Traceability**: FR-18
-
-**Acceptance criteria**:
-- Report appears in logs.
-- No output file is created.
-
-### SI-F2 — File output
-
-**Statement**: When `output=file`, the report shall be written to a file in the workspace root using the legacy filenames.
-
-**Traceability**: FR-18
-
-**Acceptance criteria**:
-- `format=text` → writes `code-coverage-results.txt`.
-- `format=markdown` → writes `code-coverage-results.md`.
-- The content matches what would be printed to console.
-
-### SI-F3 — Both output
-
-**Statement**: When `output=both`, the report shall be written both to console and to the output file.
-
-**Traceability**: FR-18
-
-**Acceptance criteria**:
-- Both SI-F1 and SI-F2 criteria are met in one run.
-
----
-
 ## H) Non-functional specification items
 
 ### SI-N1 — Runtime and portability

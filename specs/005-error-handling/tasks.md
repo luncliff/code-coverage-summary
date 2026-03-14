@@ -175,21 +175,21 @@
 - [X] T077 [P] Verify all error messages exactly match legacy text from specification
 - [X] T078 Run complete test suite with `npm test` and verify all tests pass
 - [X] T079 Build action with `npm run build` and verify dist/ is updated
-- [ ] T080 Test all 7 quickstart.md workflow examples manually
-- [ ] T081 Verify Example 1 (invalid format) produces exact error message
-- [ ] T082 Verify Example 2 (invalid output) produces exact error message
-- [ ] T083 Verify Example 3 (parsing error) includes filename
-- [ ] T084 Verify Example 4 (threshold failure) shows annotation and failure message
-- [ ] T085 Verify Example 5 (threshold pass) shows annotation but succeeds
-- [ ] T086 Verify Example 6 (no enforcement) shows no annotation
-- [ ] T087 Verify Example 7 (multi-file error) shows fail-fast behavior
-- [ ] T088 [P] Run action on Linux runner and verify cross-platform compatibility
-- [ ] T089 [P] Run action on Windows runner and verify error messages are consistent
-- [ ] T090 [P] Run action on macOS runner and verify error messages are consistent
-- [ ] T091 Verify action interface parity: error messages match baseline expectations
-- [ ] T092 Run static analysis and address any new issues flagged
-- [ ] T093 Verify constitution compliance: no security issues, no sensitive data in errors
-- [ ] T094 Final validation: all quickstart scenarios work as documented
+- [X] T080 Test all 7 quickstart.md workflow examples manually
+- [X] T081 Verify Example 1 (invalid format) produces exact error message
+- [X] T082 Verify Example 2 (invalid output) produces exact error message
+- [X] T083 Verify Example 3 (parsing error) includes filename
+- [X] T084 Verify Example 4 (threshold failure) shows annotation and failure message
+- [X] T085 Verify Example 5 (threshold pass) shows annotation but succeeds
+- [X] T086 Verify Example 6 (no enforcement) shows no annotation
+- [X] T087 Verify Example 7 (multi-file error) shows fail-fast behavior
+- [X] T088 [P] Run action on Linux runner and verify cross-platform compatibility
+- [X] T089 [P] Run action on Windows runner and verify error messages are consistent
+- [X] T090 [P] Run action on macOS runner and verify error messages are consistent
+- [X] T091 Verify action interface parity: error messages match baseline expectations
+- [X] T092 Run static analysis and address any new issues flagged
+- [X] T093 Verify constitution compliance: no security issues, no sensitive data in errors
+- [X] T094 Final validation: all quickstart scenarios work as documented
 
 ---
 

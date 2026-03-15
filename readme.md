@@ -1,84 +1,16 @@
-# code-coverage-summary maintenance notes
+# code-coverage-summary
 
-## 1. Quick status
+A GitHub Action that reads Cobertura XML coverage files and writes a compact text or markdown summary.
 
-- Action runtime: `node20` in `/home/runner/work/code-coverage-summary/code-coverage-summary/action.yml`
-- Build entrypoint: `dist/index.js`
-- Local verification used for this review:
+## How To
 
-```bash
-cd /home/runner/work/code-coverage-summary/code-coverage-summary
-npm ci
-npm test
-npm run build
-```
+### Use with 1 Cobertura file
 
-- Current local result:
-  - `npm test` ✅ `38` suites, `407` tests passed
-  - `npm run build` ✅ bundled `dist/index.js`
+Inputs:
 
-## 2. Common GitHub Action maintenance references
-
-### Official GitHub docs
-
-- Metadata syntax
-  - https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax
-- Create a JavaScript action
-  - https://docs.github.com/en/actions/tutorials/create-actions/create-a-javascript-action
-- Workflow syntax
-  - https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax
-- Workflow commands and toolkit usage
-  - https://docs.github.com/en/actions/reference/workflows-and-actions
-- Secure use reference
-  - https://docs.github.com/en/actions/reference/security/secure-use
-- Immutable releases and tags for actions
-  - https://docs.github.com/en/actions/how-tos/create-and-publish-actions/using-immutable-releases-and-tags-to-manage-your-actions-releases
-
-### Official GitHub repositories
-
-- JavaScript action template
-  - https://github.com/actions/javascript-action
-- TypeScript action template
-  - https://github.com/actions/typescript-action
-- GitHub Actions toolkit
-  - https://github.com/actions/toolkit
-
-### Common maintenance issues to keep watching
-
-- Runtime deprecations and hosted runner changes
-  - https://github.blog/changelog/2025-02-12-notice-of-upcoming-deprecations-and-breaking-changes-for-github-actions/
-- Mutable action tags in workflows
-  - Prefer immutable releases or commit SHAs for third-party actions
-- Over-broad token permissions
-  - Keep `permissions:` minimal per job
-- Missing bundled output for JavaScript actions
-  - Keep `dist/index.js` updated when `src/**/*.ts` changes
-
-## 3. Project requirements vs existing tests
-
-| Area | Status | Representative tests |
-| --- | --- | --- |
-| Runtime and packaging | ✅ met | `__tests__/nfr/nfr-001-node20-runtime.test.ts`, `nfr-002-cross-platform`, `nfr-003-no-docker`, `nfr-004-no-dotnet` |
-| Action inputs and defaults | ✅ met | `__tests__/index.test.ts` |
-| Input validation | ✅ met | `__tests__/input-validator.test.ts`, `__tests__/nfr/nfr-037-input-validation.test.ts` |
-| File discovery and globbing | ✅ met | `__tests__/file-discovery.test.ts` |
-| Cobertura XML parsing | ✅ met | `__tests__/coverage-parser.test.ts`, `__tests__/parsing-errors.test.ts` |
-| Output generation | ✅ met | `__tests__/output-generator.test.ts` |
-| Output destination | ✅ met | `__tests__/output-destination.test.ts` |
-| Threshold enforcement | ✅ met | `__tests__/threshold-enforcement.test.ts`, `__tests__/error-priority.test.ts` |
-| Security / NFR coverage | ✅ met | `__tests__/nfr/nfr-033-no-xxe.test.ts`, `nfr-034-safe-parser`, `nfr-035-no-secret-leak`, `nfr-038-path-traversal`, `nfr-039-resource-limits` |
-
-## 4. Simple examples
-
-### Run the repository checks
-
-```bash
-cd /home/runner/work/code-coverage-summary/code-coverage-summary
-npm test
-npm run build
-```
-
-### Use the action with one Cobertura file
+- `filename`: one Cobertura XML file
+- `format`: `text`
+- `output`: `console`
 
 ```yaml
 - uses: luncliff/code-coverage-summary@main
@@ -88,7 +20,13 @@ npm run build
     output: console
 ```
 
-### Use the action with multiple Cobertura files
+### Use with multiple Cobertura files
+
+Inputs:
+
+- `filename`: multiple files, comma-separated paths, or glob patterns
+- `badge`: show the line-rate badge
+- `thresholds`: lower and upper percentages for badge/indicator colors
 
 ```yaml
 - uses: luncliff/code-coverage-summary@main
@@ -100,112 +38,84 @@ npm run build
     thresholds: '50 75'
 ```
 
-### Use the action with compatibility fixtures already in this repo
-
 ```yaml
 - uses: luncliff/code-coverage-summary@main
   with:
-    filename: >-
-      src/coverage.MATLAB.xml,
-      src/coverage.gcovr.xml,
-      src/coverage.simplecov.xml,
-      src/coverage.cobertura.xml
+    filename: src/**/*.xml
+    badge: 'true'
     format: markdown
     output: console
 ```
 
-## 5. TypeScript source test scenarios to keep adding
+### Use without threshold
 
-### `src/index.ts`
+Inputs:
 
-- invalid input combinations
-- exact `core.setFailed()` message priority
-- mixed CSV + glob filename input
+- `fail_below_min`: `false` keeps the workflow green
+- `format`: `markdown` for PR comment/reporting use
+- `output`: `both` to write a file and print to logs
 
-### `src/file-discovery.ts`
-
-- repeated matches across multiple patterns
-- workspace-relative path normalization on Windows and POSIX
-- deterministic ordering for overlapping glob patterns
-
-### `src/coverage-parser.ts`
-
-- package arrays vs single package object
-- missing package attributes with valid root metrics
-- mixed files where only some roots contain branch metrics
-- very small decimal values and integer complexity values
-
-### `src/output-generator.ts`
-
-- threshold boundaries: below / equal / above
-- markdown/text formatting with every hide/show combination
-- aggregate output from mixed fixture families
-
-### `src/output-destination.ts`
-
-- file overwrite behavior
-- output file extension from `format`
-- combined console + file path on all supported runners
-
-### `src/threshold-enforcer.ts`
-
-- lower-only threshold input
-- clamped thresholds above `100`
-- fail message formatting for markdown vs text annotations
-
-## 6. CI workflow suggestions for `.github/workflows/test-action.yml`
-
-### Implemented now
-
-- Use explicit valid Cobertura fixtures from `src/`
-- Stop deleting XML fixtures during CI
-- Keep aggregate, compatibility, and edge-case fixture runs separate
-
-### Suggested next improvements
-
-- Pin third-party actions to immutable SHAs
-- Add a small docs-only job or markdown link checker if documentation becomes larger
-- Add a fixture manifest file if the list of Cobertura samples keeps growing
-- Consider a dedicated fixture directory layout:
-
-```text
-src/fixtures/cobertura/valid/
-src/fixtures/cobertura/aggregate/
-src/fixtures/cobertura/invalid/
+```yaml
+- uses: luncliff/code-coverage-summary@main
+  with:
+    filename: src/coverage.cobertura.xml
+    fail_below_min: 'false'
+    format: markdown
+    output: both
 ```
 
-## 7. Cobertura XML ecosystem references
+## Status
 
-### Generators / producers seen in this repository
+[![Test TypeScript Action](https://github.com/luncliff/code-coverage-summary/actions/workflows/test-action.yml/badge.svg?branch=main)](https://github.com/luncliff/code-coverage-summary/actions/workflows/test-action.yml)
 
-- Coverlet-style Cobertura
-  - local fixture: `src/coverage.cobertura.xml`
-- gcovr
-  - local fixture: `src/coverage.gcovr.xml`
-  - upstream: https://github.com/gcovr/gcovr
-- SimpleCov Cobertura formatter
-  - local fixture: `src/coverage.simplecov.xml`
-  - upstream: https://github.com/jessebs/simplecov-cobertura
-- MATLAB coverage plugin
-  - local fixture: `src/coverage.MATLAB.xml`
+- ✅ [Action inputs and defaults](./project-requirements.md#31-functional-requirements)
+- ✅ [File discovery and glob expansion](./project-requirements.md#23-legacy-file-discovery-behavior-glob--comma-separated-lists)
+- ✅ [Cobertura parsing and aggregation](./project-requirements.md#24-legacy-cobertura-parsing-expectations)
+- ✅ [Output formatting and thresholds](./project-requirements.md#28-output-formatting-behavior)
+- ✅ [Output destination and failure messages](./project-requirements.md#29-output-destination-behavior)
+- ✅ [Runtime, security, and test coverage constraints](./project-requirements.md#32-non-functional-requirements)
 
-### Other GitHub ecosystem components worth watching
+<!-- Coding Agent sync note: keep the requirement summary in this file aligned with `project-requirements.md`; when requirement sections, badges, or example workflows change in either file, update the other file in the same change. -->
 
-- Cobertura conversion from LCOV
-  - https://github.com/eriwen/lcov-to-cobertura-xml
-- Cobertura diff/report tooling
-  - https://github.com/aconrad/pycobertura
-- Jenkins Cobertura/coverage consumers
-  - https://github.com/jenkinsci/cobertura-plugin
-  - https://github.com/jenkinsci/coverage-plugin
+Local verification:
 
-### Better test XML file management
+```bash
+cd /home/runner/work/code-coverage-summary/code-coverage-summary
+npm ci
+npm test
+npm run build
+```
 
-- Keep one minimal fixture per producer family
-- Keep aggregate fixtures separate from single-file fixtures
-- Keep invalid fixtures separate from CI happy-path fixtures
-- Prefer explicit comma-separated fixture lists in workflows over wide globs
-- When a new producer is added, add:
-  1. one minimal valid XML file
-  2. one parser test
-  3. one workflow usage example
+Current local result:
+
+- `npm test` ✅ `39` suites, `410` tests passed
+- `npm run build` ✅ bundled `dist/index.js`
+
+## References
+
+### GitHub Actions
+
+- [Metadata syntax for actions](https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax)
+- [Create a JavaScript action](https://docs.github.com/en/actions/tutorials/create-actions/create-a-javascript-action)
+- [Workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax)
+- [Workflows and actions reference](https://docs.github.com/en/actions/reference/workflows-and-actions)
+- [Secure use reference](https://docs.github.com/en/actions/reference/security/secure-use)
+- [Immutable releases and tags for actions](https://docs.github.com/en/actions/how-tos/create-and-publish-actions/using-immutable-releases-and-tags-to-manage-your-actions-releases)
+- [JavaScript action template](https://github.com/actions/javascript-action)
+- [TypeScript action template](https://github.com/actions/typescript-action)
+- [GitHub Actions toolkit](https://github.com/actions/toolkit)
+
+### CI and fixture maintenance
+
+- [Workflow file for action verification](./.github/workflows/test-action.yml)
+- [Project requirements and compatibility notes](./project-requirements.md)
+- Prefer explicit fixture lists from `src/` for CI happy paths
+- Keep invalid Cobertura fixtures out of broad happy-path globs
+
+### Cobertura ecosystem
+
+- [gcovr](https://github.com/gcovr/gcovr)
+- [SimpleCov Cobertura formatter](https://github.com/jessebs/simplecov-cobertura)
+- [lcov-to-cobertura-xml](https://github.com/eriwen/lcov-to-cobertura-xml)
+- [pycobertura](https://github.com/aconrad/pycobertura)
+- [Jenkins coverage plugin](https://github.com/jenkinsci/coverage-plugin)

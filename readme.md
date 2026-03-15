@@ -80,16 +80,10 @@ Inputs:
 Local verification:
 
 ```bash
-cd /home/runner/work/code-coverage-summary/code-coverage-summary
-npm ci
-npm test
+npm install
+npm run test
 npm run build
 ```
-
-Current local result:
-
-- `npm test` ✅ `39` suites, `410` tests passed
-- `npm run build` ✅ bundled `dist/index.js`
 
 ## References
 

@@ -83,25 +83,33 @@ jobs:
           output: 'console'
           thresholds: '50 75'
 
-      - name: "Remove tested/invalid coverage XML files"
-        run: |
-          rm src/coverage.aggregate-*.xml # tested
-          # no information
-          rm src/coverage.invalid-root.xml
-          rm src/coverage.missing-root.xml
-          rm src/coverage.no-branches.xml
-          rm src/coverage.no-packages.xml
-          rm src/coverage.unnamed-packages.xml
-        shell: bash
-
-      - name: "Test Action — markdown output"
+      - name: "Test Action — compatibility fixtures"
         uses: ./
         with:
-          filename: 'src/coverage.*.xml'
+          filename: >-
+            src/coverage.MATLAB.xml,
+            src/coverage.gcovr.xml,
+            src/coverage.simplecov.xml,
+            src/coverage.cobertura.xml
           badge: 'true'
           fail_below_min: 'false'
           format: 'markdown'
           hide_complexity: 'true'
+          indicators: 'true'
+          output: 'console'
+          thresholds: '50 75'
+
+      - name: "Test Action — edge-case fixtures"
+        uses: ./
+        with:
+          filename: >-
+            src/coverage.no-branches.xml,
+            src/coverage.no-packages.xml,
+            src/coverage.unnamed-packages.xml
+          badge: 'false'
+          fail_below_min: 'false'
+          format: 'markdown'
+          hide_complexity: 'false'
           indicators: 'true'
           output: 'console'
           thresholds: '50 75'

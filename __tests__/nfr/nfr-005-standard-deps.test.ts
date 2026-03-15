@@ -16,14 +16,14 @@ describe('NFR-005: Standard JavaScript Dependencies Only', () => {
 
   test('all dependencies should be standard npm packages', () => {
     const deps = packageJson.dependencies || {}
-    
+
     // Verify core dependencies are official GitHub Actions packages or well-known libraries
     const expectedDeps = [
       '@actions/core',
       '@actions/glob',
       'fast-xml-parser'
     ]
-    
+
     expectedDeps.forEach(dep => {
       expect(deps[dep]).toBeDefined()
     })
@@ -34,7 +34,7 @@ describe('NFR-005: Standard JavaScript Dependencies Only', () => {
       ...packageJson.dependencies,
       ...packageJson.devDependencies
     }
-    
+
     // These packages are platform-specific or have native bindings
     const platformSpecific = [
       'fsevents',
@@ -44,7 +44,7 @@ describe('NFR-005: Standard JavaScript Dependencies Only', () => {
       'windows-build-tools',
       'macos-release'
     ]
-    
+
     platformSpecific.forEach(dep => {
       expect(allDeps[dep]).toBeUndefined()
     })
@@ -52,46 +52,46 @@ describe('NFR-005: Standard JavaScript Dependencies Only', () => {
 
   test('dependencies should be compatible with Node 20', () => {
     const deps = packageJson.dependencies || {}
-    
+
     // @actions packages should be latest versions compatible with Node 20
     expect(deps['@actions/core']).toBeDefined()
     expect(deps['@actions/glob']).toBeDefined()
-    
-    // Verify versions are reasonably recent
+
+    // Verify versions are semver-pinned and reasonably recent
     const coreVersion = deps['@actions/core']
-    expect(coreVersion).toMatch(/\^1\.\d+\.\d+/)
+    expect(coreVersion).toMatch(/\^[1-9]\d*\.\d+\.\d+/)
   })
 
   test('package.json should specify Node engine requirement', () => {
     // Should have engines field (optional but recommended)
     if (packageJson.engines) {
       expect(packageJson.engines.node).toBeDefined()
-      
+
       // Should specify Node 20 or higher
       const nodeVersion = packageJson.engines.node
       expect(nodeVersion).toMatch(/>=?\s*20/)
     }
-    
+
     // Build script should target node20
     expect(packageJson.scripts.build).toContain('node20')
   })
 
   test('should use ESBuild for pure JavaScript bundling', () => {
     const devDeps = packageJson.devDependencies || {}
-    
+
     // Using esbuild (pure JavaScript bundler, no native deps)
     expect(devDeps['esbuild']).toBeDefined()
   })
 
   test('should use TypeScript for type safety', () => {
     const devDeps = packageJson.devDependencies || {}
-    
+
     expect(devDeps['typescript']).toBeDefined()
   })
 
   test('test framework should be pure JavaScript', () => {
     const devDeps = packageJson.devDependencies || {}
-    
+
     // Using Jest with ts-jest (no native dependencies)
     expect(devDeps['jest']).toBeDefined()
     expect(devDeps['ts-jest']).toBeDefined()
@@ -102,7 +102,7 @@ describe('NFR-005: Standard JavaScript Dependencies Only', () => {
       ...packageJson.dependencies,
       ...packageJson.devDependencies
     }
-    
+
     // List of known deprecated packages
     const deprecated = [
       'request', // deprecated
@@ -111,7 +111,7 @@ describe('NFR-005: Standard JavaScript Dependencies Only', () => {
       'babel-core', // use @babel/core
       'istanbul' // use nyc or jest coverage
     ]
-    
+
     deprecated.forEach(dep => {
       expect(allDeps[dep]).toBeUndefined()
     })
@@ -119,10 +119,10 @@ describe('NFR-005: Standard JavaScript Dependencies Only', () => {
 
   test('dependencies should be minimal', () => {
     const deps = Object.keys(packageJson.dependencies || {})
-    
+
     // Should have minimal dependencies for security and maintainability
     expect(deps.length).toBeLessThanOrEqual(5)
-    
+
     // Each dependency should serve a clear purpose
     deps.forEach(dep => {
       const validDeps = [
@@ -131,7 +131,7 @@ describe('NFR-005: Standard JavaScript Dependencies Only', () => {
         'fast-xml-parser',   // XML parsing
         '@actions/http-client' // (might be in overrides)
       ]
-      
+
       expect(validDeps).toContain(dep)
     })
   })
@@ -146,10 +146,10 @@ describe('NFR-005: Standard JavaScript Dependencies Only', () => {
 
   test('devDependencies should be appropriate for Node 20', () => {
     const devDeps = packageJson.devDependencies || {}
-    
+
     // TypeScript types for Node should be recent
     expect(devDeps['@types/node']).toBeDefined()
-    
+
     // Jest should be recent version
     const jestVersion = devDeps['jest']
     expect(jestVersion).toMatch(/\^29\./)

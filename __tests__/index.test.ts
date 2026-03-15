@@ -20,10 +20,6 @@ jest.mock('@actions/core', () => ({
   debug: jest.fn(),
 }))
 
-jest.mock('@actions/glob', () => ({
-  create: jest.fn(),
-}))
-
 import * as core from '@actions/core'
 
 const mockGetInput = core.getInput as jest.MockedFunction<typeof core.getInput>

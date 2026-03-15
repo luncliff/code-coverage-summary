@@ -14,12 +14,6 @@ jest.mock('@actions/core', () => ({
   debug: jest.fn(),
 }))
 
-jest.mock('@actions/glob', () => ({
-  create: jest.fn().mockResolvedValue({
-    glob: jest.fn().mockResolvedValue([]),
-  }),
-}))
-
 jest.mock('../../src/file-discovery', () => ({
   discoverCoverageFiles: jest.fn().mockResolvedValue([]),
 }))

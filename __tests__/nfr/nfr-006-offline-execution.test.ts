@@ -20,9 +20,6 @@ jest.mock('@actions/core', () => ({
   debug: jest.fn(),
 }))
 
-jest.mock('@actions/glob', () => ({
-  create: jest.fn(),
-}))
 
 import { generateBadgeUrl, parseThresholds } from '../../src/output-generator'
 

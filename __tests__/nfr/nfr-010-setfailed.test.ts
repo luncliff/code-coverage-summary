@@ -14,11 +14,6 @@ jest.mock('@actions/core', () => ({
   debug: jest.fn(),
 }))
 
-jest.mock('@actions/glob', () => ({
-  create: jest.fn().mockResolvedValue({
-    glob: jest.fn().mockResolvedValue([]),
-  }),
-}))
 
 import * as core from '@actions/core'
 

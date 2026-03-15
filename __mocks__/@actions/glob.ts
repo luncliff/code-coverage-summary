@@ -41,14 +41,19 @@ function collectFiles(root: string): string[] {
             continue
         }
 
-        const entries = fs.readdirSync(current, { withFileTypes: true })
-        for (const entry of entries) {
-            const fullPath = path.join(current, entry.name)
-            if (entry.isDirectory()) {
-                stack.push(fullPath)
-            } else if (entry.isFile()) {
-                files.push(fullPath)
+        try {
+            const entries = fs.readdirSync(current, { withFileTypes: true })
+            for (const entry of entries) {
+                const fullPath = path.join(current, entry.name)
+                if (entry.isDirectory()) {
+                    stack.push(fullPath)
+                } else if (entry.isFile()) {
+                    files.push(fullPath)
+                }
             }
+        } catch (err) {
+            // Ignore errors from directories we can't read
+            continue
         }
     }
 
@@ -59,7 +64,7 @@ function resolveWorkspaceRoot(): string {
     return process.env.GITHUB_WORKSPACE || process.cwd()
 }
 
-export async function create(patterns: string): Promise<Globber> {
+async function defaultGlobImplementation(patterns: string): Promise<Globber> {
     const patternList = patterns
         .split(/\r?\n/)
         .map(pattern => pattern.trim())
@@ -90,3 +95,6 @@ export async function create(patterns: string): Promise<Globber> {
         }
     }
 }
+
+// Export as a jest mock function with default implementation
+export const create = jest.fn<Promise<Globber>, [string]>().mockImplementation(defaultGlobImplementation)

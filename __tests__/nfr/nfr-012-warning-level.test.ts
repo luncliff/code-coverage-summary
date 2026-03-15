@@ -15,9 +15,6 @@ jest.mock('@actions/core', () => ({
   debug: jest.fn(),
 }))
 
-jest.mock('@actions/glob', () => ({
-  create: jest.fn(),
-}))
 
 describe('NFR-012: Warning Level for Recoverable Issues', () => {
   test('source code should support core.warning for non-fatal issues', () => {
@@ -138,7 +135,7 @@ describe('NFR-012: Warning Level for Recoverable Issues', () => {
     const lines = content.split('\n')
     const parseErrorIndex = lines.findIndex(l => l.includes('Parsing Error'))
     expect(parseErrorIndex).toBeGreaterThan(-1)
-    
+
     // Look for core.setFailed within 5 lines before the error message
     const contextLines = lines.slice(Math.max(0, parseErrorIndex - 5), parseErrorIndex + 1)
     const hasSetFailed = contextLines.some(l => l.includes('core.setFailed'))
@@ -147,7 +144,7 @@ describe('NFR-012: Warning Level for Recoverable Issues', () => {
     // File not found should use setFailed
     const notFoundIndex = lines.findIndex(l => l.includes('No files found'))
     expect(notFoundIndex).toBeGreaterThan(-1)
-    
+
     const notFoundContext = lines.slice(Math.max(0, notFoundIndex - 5), notFoundIndex + 1)
     const hasSetFailedForNotFound = notFoundContext.some(l => l.includes('core.setFailed'))
     expect(hasSetFailedForNotFound).toBe(true)

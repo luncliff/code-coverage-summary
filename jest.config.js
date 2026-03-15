@@ -4,9 +4,15 @@ module.exports = {
     testEnvironment: 'node',
     testMatch: ['**/__tests__/**/*.test.ts'],
     moduleNameMapper: {
-        '^@actions/core$': '<rootDir>/__tests__/helpers/action-test-harness.ts',
-        '^@actions/glob$': '<rootDir>/__tests__/helpers/glob-test-harness.ts'
+        '^@actions/core$': '<rootDir>/__tests__/helpers/action-test-harness.ts'
     },
+    transform: {
+        '^.+\\.tsx?$': 'ts-jest'
+    },
+    transformIgnorePatterns: [
+        'node_modules/(?!(@actions)/)'
+    ],
+    moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
     collectCoverage: false,
     coverageDirectory: 'coverage',
     coverageReporters: ['lcov', 'text'],

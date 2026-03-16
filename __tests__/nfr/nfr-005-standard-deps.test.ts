@@ -152,6 +152,6 @@ describe('NFR-005: Standard JavaScript Dependencies Only', () => {
 
     // Jest should be recent version
     const jestVersion = devDeps['jest']
-    expect(jestVersion).toMatch(/\^29\./)
+    expect(jestVersion).toMatch(/\^30\./)
   })
 })

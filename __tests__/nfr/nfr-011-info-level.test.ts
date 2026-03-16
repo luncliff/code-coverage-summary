@@ -3,6 +3,10 @@
  * Verify core.info() is used for normal messages
  */
 
+import * as fs from 'fs'
+import * as path from 'path'
+import * as core from '@actions/core'
+import * as glob from '@actions/glob'
 import { run } from '../../src/index'
 
 jest.mock('@actions/core', () => ({
@@ -11,14 +15,18 @@ jest.mock('@actions/core', () => ({
   info: jest.fn(),
   warning: jest.fn(),
   error: jest.fn(),
-  debug: jest.fn(),
-}))
+  debug: jest.fn()
+}), { virtual: true });
+
+jest.mock('@actions/glob', () => ({
+  create: jest.fn()
+}), { virtual: true });
 
 jest.mock('../../src/file-discovery', () => ({
-  discoverCoverageFiles: jest.fn().mockResolvedValue([]),
-}))
+  discoverCoverageFiles: jest.fn()
+}));
 
-import * as core from '@actions/core'
+import { discoverCoverageFiles } from '../../src/file-discovery'
 
 const mockInfo = core.info as jest.MockedFunction<typeof core.info>
 const mockGetInput = core.getInput as jest.MockedFunction<typeof core.getInput>
@@ -47,18 +55,17 @@ describe('NFR-011: Info Level for Normal Operations', () => {
   }
 
   test('normal file discovery should use core.info', async () => {
-    setupValidInputs()
+    setupValidInputs();
 
-    const mockGlob = require('@actions/glob')
-    mockGlob.create.mockResolvedValue({
-      glob: jest.fn().mockResolvedValue([
-        'coverage.xml',
-      ]),
-    })
+    const globber = {
+      glob: jest.fn().mockResolvedValue(['coverage.xml']),
+      globGenerator: jest.fn(),
+      getSearchPaths: jest.fn().mockResolvedValue([])
+    };
 
-    jest.doMock('../../src/file-discovery', () => ({
-      discoverCoverageFiles: jest.fn().mockResolvedValue(['coverage.xml']),
-    }))
+    (glob.create as jest.MockedFunction<typeof glob.create>).mockResolvedValue(globber);
+
+    (discoverCoverageFiles as jest.MockedFunction<typeof discoverCoverageFiles>).mockResolvedValue(['coverage.xml'])
 
     // This will fail due to no file, but should still try to use core.info
     await run()
@@ -71,9 +78,6 @@ describe('NFR-011: Info Level for Normal Operations', () => {
   })
 
   test('index.ts should use core.info for logging', () => {
-    const fs = require('fs')
-    const path = require('path')
-
     const indexPath = path.join(__dirname, '../../src/index.ts')
     const content = fs.readFileSync(indexPath, 'utf8')
 
@@ -87,9 +91,6 @@ describe('NFR-011: Info Level for Normal Operations', () => {
   })
 
   test('info should be used for file processing messages', () => {
-    const fs = require('fs')
-    const path = require('path')
-
     const indexPath = path.join(__dirname, '../../src/index.ts')
     const content = fs.readFileSync(indexPath, 'utf8')
 
@@ -109,9 +110,6 @@ describe('NFR-011: Info Level for Normal Operations', () => {
   })
 
   test('info-level messages should describe normal operations', () => {
-    const fs = require('fs')
-    const path = require('path')
-
     const indexPath = path.join(__dirname, '../../src/index.ts')
     const content = fs.readFileSync(indexPath, 'utf8')
 
@@ -128,9 +126,6 @@ describe('NFR-011: Info Level for Normal Operations', () => {
   })
 
   test('info should not be used for warnings or errors', () => {
-    const fs = require('fs')
-    const path = require('path')
-
     const indexPath = path.join(__dirname, '../../src/index.ts')
     const content = fs.readFileSync(indexPath, 'utf8')
 
@@ -145,9 +140,6 @@ describe('NFR-011: Info Level for Normal Operations', () => {
   })
 
   test('core.info should be imported from @actions/core', () => {
-    const fs = require('fs')
-    const path = require('path')
-
     const indexPath = path.join(__dirname, '../../src/index.ts')
     const content = fs.readFileSync(indexPath, 'utf8')
 

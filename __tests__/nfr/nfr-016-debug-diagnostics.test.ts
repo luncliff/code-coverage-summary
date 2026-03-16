@@ -7,19 +7,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-jest.mock('@actions/core', () => ({
-  getInput: jest.fn(),
-  setFailed: jest.fn(),
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
-  debug: jest.fn(),
-}))
-
-jest.mock('@actions/glob', () => ({
-  create: jest.fn(),
-}))
-
 describe('NFR-016: Diagnostic Info in Debug', () => {
   test('debug logging can include file paths', () => {
     // Debug should log file paths for diagnostic purposes

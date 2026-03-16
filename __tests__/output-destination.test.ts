@@ -9,20 +9,20 @@
  * Strategy: Mock @actions/core and fs to verify routing behavior without side effects.
  */
 
-import { routeReport, getReportFilename } from '../src/output-destination'
 import * as core from '@actions/core'
 import * as fs from 'fs'
+import { routeReport, getReportFilename } from '../src/output-destination'
 
 // Mock @actions/core
 jest.mock('@actions/core', () => ({
     info: jest.fn(),
     setFailed: jest.fn(),
-}))
+}), { virtual: true });
 
 // Mock fs
 jest.mock('fs', () => ({
     writeFileSync: jest.fn(),
-}))
+}));
 
 const mockCoreInfo = core.info as jest.MockedFunction<typeof core.info>
 const mockCoreSetFailed = core.setFailed as jest.MockedFunction<typeof core.setFailed>

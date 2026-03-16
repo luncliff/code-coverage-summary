@@ -1,13 +1,165 @@
-import * as path from 'path'
-import {
-  getFailedMessages,
-  getInfoMessages,
-  resetActionTestState,
-  setActionInputs
-} from './helpers/action-test-harness'
+import * as fs from 'node:fs'
+import * as path from 'node:path'
 
-const { discoverCoverageFiles, parseCoveragePatterns } = require('../src/file-discovery')
-const { run } = require('../src/index')
+const infoMessages: string[] = []
+const failedMessages: string[] = []
+const debugMessages: string[] = []
+const inputValues: Record<string, string> = {}
+
+function getInput(name: string, options?: { required?: boolean; trimWhitespace?: boolean }): string {
+  const value = inputValues[name] ?? ''
+  if (options?.required && !value) {
+    throw new Error(`Input required and not supplied: ${name}`)
+  }
+  if (options?.trimWhitespace === false) {
+    return value
+  }
+  return value.trim()
+}
+
+function debug(message: string): void {
+  debugMessages.push(message)
+}
+
+function info(message: string): void {
+  infoMessages.push(message)
+}
+
+function setFailed(message: string): void {
+  failedMessages.push(message)
+  process.exitCode = 1
+}
+
+function resetActionTestState(): void {
+  infoMessages.length = 0
+  failedMessages.length = 0
+  debugMessages.length = 0
+  process.exitCode = 0
+  for (const key of Object.keys(inputValues)) {
+    delete inputValues[key]
+  }
+}
+
+function setActionInputs(inputs: Record<string, string>): void {
+  for (const key of Object.keys(inputValues)) {
+    delete inputValues[key]
+  }
+  for (const [key, value] of Object.entries(inputs)) {
+    inputValues[key] = value
+  }
+}
+
+function getInfoMessages(): string[] {
+  return [...infoMessages]
+}
+
+function getFailedMessages(): string[] {
+  return [...failedMessages]
+}
+
+function normalizePath(filePath: string): string {
+  return filePath.split(path.sep).join('/')
+}
+
+function toRegex(globPattern: string): RegExp {
+  const doubleStarPatterns: string[] = []
+
+  const withDoubleStarTokens = globPattern
+    .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+    .replace(/\*\*\/?/g, token => {
+      const replacement = token === '**/' ? '(?:.*/)?' : '.*'
+      doubleStarPatterns.push(replacement)
+      return `::DOUBLE_STAR_${doubleStarPatterns.length - 1}::`
+    })
+
+  const withSingleStarPatterns = withDoubleStarTokens
+    .replace(/\*/g, '[^/]*')
+    .replace(/\?/g, '[^/]')
+
+  const escaped = doubleStarPatterns.reduce((current, replacement, index) => {
+    return current.replace(`::DOUBLE_STAR_${index}::`, replacement)
+  }, withSingleStarPatterns)
+
+  return new RegExp(`^${escaped}$`)
+}
+
+function collectFiles(root: string): string[] {
+  const stack = [root]
+  const files: string[] = []
+
+  while (stack.length > 0) {
+    const current = stack.pop()
+    if (!current) {
+      continue
+    }
+
+    try {
+      const entries = fs.readdirSync(current, { withFileTypes: true })
+      for (const entry of entries) {
+        const fullPath = path.join(current, entry.name)
+        if (entry.isDirectory()) {
+          stack.push(fullPath)
+        } else if (entry.isFile()) {
+          files.push(fullPath)
+        }
+      }
+    } catch (err) {
+      continue
+    }
+  }
+
+  return files
+}
+
+function resolveWorkspaceRoot(): string {
+  return process.env.GITHUB_WORKSPACE || process.cwd()
+}
+
+async function defaultGlobImplementation(patterns: string): Promise<{ glob(): Promise<string[]> }> {
+  const patternList = patterns
+    .split(/\r?\n/)
+    .map(pattern => pattern.trim())
+    .filter(pattern => pattern.length > 0)
+
+  return {
+    async glob(): Promise<string[]> {
+      const workspace = resolveWorkspaceRoot()
+      const allFiles = collectFiles(workspace)
+      const uniqueMatches = new Set<string>()
+
+      for (const pattern of patternList) {
+        const regex = toRegex(normalizePath(pattern))
+
+        for (const filePath of allFiles) {
+          const relative = normalizePath(path.relative(workspace, filePath))
+          if (regex.test(relative)) {
+            uniqueMatches.add(filePath)
+          }
+        }
+      }
+
+      return Array.from(uniqueMatches).sort((a, b) =>
+        normalizePath(path.relative(workspace, a)).localeCompare(
+          normalizePath(path.relative(workspace, b))
+        )
+      )
+    }
+  }
+}
+
+jest.mock('@actions/core', () => ({
+  debug,
+  getInput,
+  info,
+  setFailed
+}), { virtual: true });
+
+jest.mock('@actions/glob', () => ({
+  create: jest.fn<Promise<{ glob(): Promise<string[]> }>, [string]>().mockImplementation(defaultGlobImplementation)
+}), { virtual: true });
+
+import { discoverCoverageFiles, parseCoveragePatterns } from '../src/file-discovery'
+import { run } from '../src/index'
 
 const FIXTURES_ROOT = path.join(__dirname, 'fixtures', 'file-discovery')
 const WORKSPACE_ROOT = FIXTURES_ROOT

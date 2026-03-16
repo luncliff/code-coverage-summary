@@ -5,22 +5,10 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
-import * as http from 'http'
-import * as https from 'https'
 
 // Mock network modules
-jest.mock('http')
-jest.mock('https')
-jest.mock('@actions/core', () => ({
-  getInput: jest.fn(),
-  setFailed: jest.fn(),
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
-  debug: jest.fn(),
-}))
-
-
+const http = require('http') as typeof import('http')
+const https = require('https') as typeof import('https')
 import { generateBadgeUrl, parseThresholds } from '../../src/output-generator'
 
 describe('NFR-006: Offline Execution', () => {

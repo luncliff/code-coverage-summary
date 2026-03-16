@@ -3,20 +3,9 @@
  * Verify number formatting doesn't depend on locale
  */
 
+import * as fs from 'fs'
+import * as path from 'path'
 import { generateTextOutput, generateMarkdownOutput, generateBadgeUrl } from '../../src/output-generator'
-
-jest.mock('@actions/core', () => ({
-  getInput: jest.fn(),
-  setFailed: jest.fn(),
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
-  debug: jest.fn(),
-}))
-
-jest.mock('@actions/glob', () => ({
-  create: jest.fn(),
-}))
 
 describe('NFR-019: Locale-Independent Formatting', () => {
   // Note: formatRate is tested indirectly through output functions
@@ -319,9 +308,6 @@ describe('NFR-019: Locale-Independent Formatting', () => {
   })
 
   test('source code should not use toLocaleString', () => {
-    const fs = require('fs')
-    const path = require('path')
-
     const generatorPath = path.join(__dirname, '../../src/output-generator.ts')
     const content = fs.readFileSync(generatorPath, 'utf8')
 

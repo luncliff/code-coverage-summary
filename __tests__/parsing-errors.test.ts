@@ -1,17 +1,5 @@
 import * as path from 'path'
-import * as core from '@actions/core'
 import { parseCoverageFile, createEmptySummary } from '../src/coverage-parser'
-
-// Mock @actions/core
-const mockSetFailed = jest.fn()
-const mockInfo = jest.fn()
-const mockGetInput = jest.fn()
-
-jest.mock('@actions/core', () => ({
-  getInput: (name: string, options?: any) => mockGetInput(name, options),
-  info: (message: string) => mockInfo(message),
-  setFailed: (message: string) => mockSetFailed(message)
-}))
 
 describe('Parsing Errors', () => {
   const fixturesDir = path.join(__dirname, 'fixtures', 'error-handling')
@@ -80,7 +68,7 @@ describe('Parsing Errors', () => {
         const relativePath = path.relative(process.cwd(), malformedFile)
         const displayPath = relativePath || path.basename(malformedFile)
         const formattedError = `Parsing Error: ${(err as Error).message} - ${displayPath}`
-        
+
         expect(formattedError).toMatch(/^Parsing Error:/)
         expect(formattedError).toContain('malformed.xml')
       }

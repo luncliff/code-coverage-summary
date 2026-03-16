@@ -8,19 +8,6 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { generateTextOutput, generateMarkdownOutput, generateBadgeUrl } from '../../src/output-generator'
 
-jest.mock('@actions/core', () => ({
-  getInput: jest.fn(),
-  setFailed: jest.fn(),
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
-  debug: jest.fn(),
-}))
-
-jest.mock('@actions/glob', () => ({
-  create: jest.fn(),
-}))
-
 describe('NFR-020: No Timestamps', () => {
   test('text output should not contain timestamps', () => {
     const summary = {

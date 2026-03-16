@@ -7,19 +7,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-jest.mock('@actions/core', () => ({
-  getInput: jest.fn(),
-  setFailed: jest.fn(),
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
-  debug: jest.fn(),
-}))
-
-jest.mock('@actions/glob', () => ({
-  create: jest.fn(),
-}))
-
 describe('NFR-009: GitHub Actions Toolkit Logging', () => {
   test('source code should not use console.log', () => {
     const sourceDir = path.join(__dirname, '../../src')

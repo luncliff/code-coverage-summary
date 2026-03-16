@@ -3,6 +3,9 @@
  * Verify error paths use core.setFailed()
  */
 
+import * as path from 'path'
+import * as core from '@actions/core'
+import * as glob from '@actions/glob'
 import { parseInputs, run } from '../../src/index'
 
 jest.mock('@actions/core', () => ({
@@ -11,11 +14,12 @@ jest.mock('@actions/core', () => ({
   info: jest.fn(),
   warning: jest.fn(),
   error: jest.fn(),
-  debug: jest.fn(),
-}))
+  debug: jest.fn()
+}), { virtual: true });
 
-
-import * as core from '@actions/core'
+jest.mock('@actions/glob', () => ({
+  create: jest.fn()
+}), { virtual: true });
 
 const mockSetFailed = core.setFailed as jest.MockedFunction<typeof core.setFailed>
 const mockGetInput = core.getInput as jest.MockedFunction<typeof core.getInput>
@@ -43,7 +47,7 @@ describe('NFR-010: Error Logging via setFailed', () => {
   }
 
   test('invalid format should call core.setFailed', async () => {
-    setupValidInputs()
+    setupValidInputs();
     mockGetInput.mockImplementation((name: string) => {
       if (name === 'filename') return 'coverage.xml'
       if (name === 'format') return 'invalid-format'
@@ -58,7 +62,7 @@ describe('NFR-010: Error Logging via setFailed', () => {
   })
 
   test('invalid output should call core.setFailed', async () => {
-    setupValidInputs()
+    setupValidInputs();
     mockGetInput.mockImplementation((name: string) => {
       if (name === 'filename') return 'coverage.xml'
       if (name === 'output') return 'invalid-output'
@@ -71,31 +75,37 @@ describe('NFR-010: Error Logging via setFailed', () => {
   })
 
   test('no files found should call core.setFailed', async () => {
-    setupValidInputs()
+    setupValidInputs();
 
     // Mock glob to return no files
-    const mockGlob = require('@actions/glob')
-    mockGlob.create.mockResolvedValue({
+    const emptyGlobber = {
       glob: jest.fn().mockResolvedValue([]),
-    })
+      globGenerator: jest.fn(),
+      getSearchPaths: jest.fn().mockResolvedValue([])
+    };
+
+    (glob.create as jest.MockedFunction<typeof glob.create>).mockResolvedValue(emptyGlobber);
 
     await run()
 
     expect(mockSetFailed).toHaveBeenCalled()
     const errorCall = mockSetFailed.mock.calls.find(
-      call => typeof call[0] === 'string' && (call[0].includes('No files found') || call[0].includes('not found'))
+      (call: [string | Error]) => typeof call[0] === 'string' && (call[0].includes('No files found') || call[0].includes('not found'))
     )
     expect(errorCall).toBeDefined()
   })
 
   test('parse error should call core.setFailed with error details', async () => {
-    setupValidInputs()
+    setupValidInputs();
 
     // Mock glob to return invalid file
-    const mockGlob = require('@actions/glob')
-    mockGlob.create.mockResolvedValue({
+    const invalidGlobber = {
       glob: jest.fn().mockResolvedValue(['/nonexistent/coverage.xml']),
-    })
+      globGenerator: jest.fn(),
+      getSearchPaths: jest.fn().mockResolvedValue([])
+    };
+
+    (glob.create as jest.MockedFunction<typeof glob.create>).mockResolvedValue(invalidGlobber);
 
     await run()
 
@@ -105,7 +115,7 @@ describe('NFR-010: Error Logging via setFailed', () => {
   })
 
   test('setFailed should be called with string message', async () => {
-    setupValidInputs()
+    setupValidInputs();
     mockGetInput.mockImplementation((name: string) => {
       if (name === 'format') return 'invalid'
       if (name === 'filename') return 'coverage.xml'
@@ -122,7 +132,7 @@ describe('NFR-010: Error Logging via setFailed', () => {
   })
 
   test('threshold parsing error should call core.setFailed', async () => {
-    setupValidInputs()
+    setupValidInputs();
     mockGetInput.mockImplementation((name: string) => {
       if (name === 'thresholds') return 'invalid threshold'
       if (name === 'filename') return 'coverage.xml'
@@ -130,7 +140,13 @@ describe('NFR-010: Error Logging via setFailed', () => {
     })
 
     // Mock glob to return a valid file so we get to threshold parsing
-    const mockGlob = require('@actions/glob')
+    const validGlobber = {
+      glob: jest.fn().mockResolvedValue([path.join(__dirname, '../fixtures/error-handling/valid-coverage.xml')]),
+      globGenerator: jest.fn(),
+      getSearchPaths: jest.fn().mockResolvedValue([])
+    };
+
+    (glob.create as jest.MockedFunction<typeof glob.create>).mockResolvedValue(validGlobber);
 
     await run()
 
@@ -139,7 +155,7 @@ describe('NFR-010: Error Logging via setFailed', () => {
   })
 
   test('setFailed message should contain useful error context', async () => {
-    setupValidInputs()
+    setupValidInputs();
     mockGetInput.mockImplementation((name: string) => {
       if (name === 'format') return 'json'
       if (name === 'filename') return 'coverage.xml'
@@ -158,7 +174,7 @@ describe('NFR-010: Error Logging via setFailed', () => {
   })
 
   test('multiple error conditions should only call setFailed once', async () => {
-    setupValidInputs()
+    setupValidInputs();
     // Set up multiple error conditions
     mockGetInput.mockImplementation((name: string) => {
       if (name === 'format') return 'invalid'

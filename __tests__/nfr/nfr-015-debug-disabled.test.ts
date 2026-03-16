@@ -4,6 +4,10 @@
  * This is framework behavior - test that we use core.debug()
  */
 
+import * as fs from 'fs'
+import * as path from 'path'
+import * as core from '@actions/core'
+import * as glob from '@actions/glob'
 import { run } from '../../src/index'
 
 jest.mock('@actions/core', () => ({
@@ -12,10 +16,12 @@ jest.mock('@actions/core', () => ({
   info: jest.fn(),
   warning: jest.fn(),
   error: jest.fn(),
-  debug: jest.fn(),
-}))
+  debug: jest.fn()
+}), { virtual: true });
 
-import * as core from '@actions/core'
+jest.mock('@actions/glob', () => ({
+  create: jest.fn()
+}), { virtual: true });
 
 const mockDebug = core.debug as jest.MockedFunction<typeof core.debug>
 const mockGetInput = core.getInput as jest.MockedFunction<typeof core.getInput>
@@ -24,7 +30,7 @@ const mockSetFailed = core.setFailed as jest.MockedFunction<typeof core.setFaile
 describe('NFR-015: Debug Not in Normal Mode', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    delete process.env.ACTIONS_STEP_DEBUG
+    delete process.env.ACTIONS_STEP_DEBUG;
   })
 
   function setupValidInputs() {
@@ -45,9 +51,6 @@ describe('NFR-015: Debug Not in Normal Mode', () => {
   }
 
   test('core.debug should be available', () => {
-    const fs = require('fs')
-    const path = require('path')
-
     const indexPath = path.join(__dirname, '../../src/index.ts')
     const content = fs.readFileSync(indexPath, 'utf8')
 
@@ -56,15 +59,18 @@ describe('NFR-015: Debug Not in Normal Mode', () => {
   })
 
   test('debug calls should not execute in normal mode', async () => {
-    setupValidInputs()
+    setupValidInputs();
 
     // Ensure debug mode is OFF
-    delete process.env.ACTIONS_STEP_DEBUG
+    delete process.env.ACTIONS_STEP_DEBUG;
 
-    const mockGlob = require('@actions/glob')
-    mockGlob.create.mockResolvedValue({
+    const emptyGlobber = {
       glob: jest.fn().mockResolvedValue([]),
-    })
+      globGenerator: jest.fn(),
+      getSearchPaths: jest.fn().mockResolvedValue([])
+    };
+
+    (glob.create as jest.MockedFunction<typeof glob.create>).mockResolvedValue(emptyGlobber);
 
     await run()
 
@@ -79,15 +85,18 @@ describe('NFR-015: Debug Not in Normal Mode', () => {
   })
 
   test('debug mode can be enabled with ACTIONS_STEP_DEBUG', async () => {
-    setupValidInputs()
+    setupValidInputs();
 
     // Set debug mode ON
-    process.env.ACTIONS_STEP_DEBUG = 'true'
+    process.env.ACTIONS_STEP_DEBUG = 'true';
 
-    const mockGlob = require('@actions/glob')
-    mockGlob.create.mockResolvedValue({
+    const emptyGlobber = {
       glob: jest.fn().mockResolvedValue([]),
-    })
+      globGenerator: jest.fn(),
+      getSearchPaths: jest.fn().mockResolvedValue([])
+    };
+
+    (glob.create as jest.MockedFunction<typeof glob.create>).mockResolvedValue(emptyGlobber);
 
     // Debug mode is handled by the GitHub Actions framework
     // Setting ACTIONS_STEP_DEBUG=true causes the runner to:
@@ -109,16 +118,13 @@ describe('NFR-015: Debug Not in Normal Mode', () => {
     // Our app should call core.debug() with diagnostic info
     // The framework decides what to display
 
-    delete process.env.ACTIONS_STEP_DEBUG
+    delete process.env.ACTIONS_STEP_DEBUG;
 
     // No ACTIONS_STEP_DEBUG env var = debug suppressed by framework
     expect(process.env.ACTIONS_STEP_DEBUG).toBeUndefined()
   })
 
   test('core.debug API should be used for diagnostic information', () => {
-    const fs = require('fs')
-    const path = require('path')
-
     const indexPath = path.join(__dirname, '../../src/index.ts')
     const content = fs.readFileSync(indexPath, 'utf8')
 
@@ -144,9 +150,6 @@ describe('NFR-015: Debug Not in Normal Mode', () => {
     // - Tokens
     // - Passwords
     // - Secrets
-
-    const fs = require('fs')
-    const path = require('path')
 
     const indexPath = path.join(__dirname, '../../src/index.ts')
     const content = fs.readFileSync(indexPath, 'utf8')

@@ -5,19 +5,6 @@
 
 import { generateTextOutput, generateMarkdownOutput, generateBadgeUrl, parseThresholds } from '../../src/output-generator'
 
-jest.mock('@actions/core', () => ({
-  getInput: jest.fn(),
-  setFailed: jest.fn(),
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
-  debug: jest.fn(),
-}))
-
-jest.mock('@actions/glob', () => ({
-  create: jest.fn(),
-}))
-
 describe('NFR-017: Deterministic Output Content', () => {
   const testSummary = {
     lineRate: 0.87,

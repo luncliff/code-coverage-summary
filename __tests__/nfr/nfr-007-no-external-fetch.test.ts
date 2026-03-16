@@ -6,19 +6,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-jest.mock('@actions/core', () => ({
-  getInput: jest.fn(),
-  setFailed: jest.fn(),
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
-  debug: jest.fn(),
-}))
-
-jest.mock('@actions/glob', () => ({
-  create: jest.fn(),
-}))
-
 import { generateBadgeUrl } from '../../src/output-generator'
 
 describe('NFR-007: No External Resource Fetching', () => {

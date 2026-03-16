@@ -7,21 +7,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-jest.mock('@actions/core', () => ({
-  getInput: jest.fn(),
-  setFailed: jest.fn(),
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
-  debug: jest.fn(),
-  startGroup: jest.fn(),
-  endGroup: jest.fn(),
-}))
-
-jest.mock('@actions/glob', () => ({
-  create: jest.fn(),
-}))
-
 describe('NFR-013: Log Grouping', () => {
   test('index.ts can use core.startGroup for log grouping', () => {
     const indexPath = path.join(__dirname, '../../src/index.ts')

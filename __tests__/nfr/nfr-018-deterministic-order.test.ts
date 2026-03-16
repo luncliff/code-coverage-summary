@@ -5,19 +5,6 @@
 
 import { generateTextOutput, generateMarkdownOutput } from '../../src/output-generator'
 
-jest.mock('@actions/core', () => ({
-  getInput: jest.fn(),
-  setFailed: jest.fn(),
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
-  debug: jest.fn(),
-}))
-
-jest.mock('@actions/glob', () => ({
-  create: jest.fn(),
-}))
-
 describe('NFR-018: Deterministic Ordering', () => {
   test('packages should appear in consistent order in text output', () => {
     const summary = {
@@ -147,10 +134,10 @@ describe('NFR-018: Deterministic Ordering', () => {
     // Check package order in markdown table
     const lines = output1.split('\n')
     const tableLines = lines.filter(line => line.includes('|') && !line.includes('---'))
-    
+
     // Skip header row (tableLines[0]) and check data rows
     const dataRows = tableLines.slice(1) // Remove header
-    
+
     // First data row should be zebra, second should be alpha
     expect(dataRows[0]).toContain('zebra')
     expect(dataRows[1]).toContain('alpha')

@@ -6,21 +6,21 @@
  * GitHub Actions runner environment.
  */
 
+import * as core from '@actions/core'
 import { parseInputs } from '../src/index'
 
-// Use factory mocks so Jest never resolves real module dependencies
-// (@actions/glob and @actions/core both transitively require @actions/http-client,
-//  which is ESM-only and incompatible with Jest CJS mode)
 jest.mock('@actions/core', () => ({
   getInput: jest.fn(),
   setFailed: jest.fn(),
   info: jest.fn(),
   warning: jest.fn(),
   error: jest.fn(),
-  debug: jest.fn(),
-}))
+  debug: jest.fn()
+}), { virtual: true });
 
-import * as core from '@actions/core'
+jest.mock('@actions/glob', () => ({
+  create: jest.fn()
+}), { virtual: true });
 
 const mockGetInput = core.getInput as jest.MockedFunction<typeof core.getInput>
 

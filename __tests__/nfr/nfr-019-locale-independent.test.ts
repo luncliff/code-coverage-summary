@@ -295,7 +295,7 @@ describe('NFR-019: Locale-Independent Formatting', () => {
     }
 
     // Run multiple times
-    const outputs = []
+    const outputs: string[] = []
     for (let i = 0; i < 5; i++) {
       outputs.push(generateTextOutput(summary, options))
     }

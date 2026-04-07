@@ -175,7 +175,7 @@ describe('NFR-018: Deterministic Ordering', () => {
     }
 
     // Run multiple times
-    const outputs = []
+    const outputs: string[] = []
     for (let i = 0; i < 5; i++) {
       outputs.push(generateTextOutput(summary, options))
     }

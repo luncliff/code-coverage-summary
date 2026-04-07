@@ -130,7 +130,7 @@ describe('NFR-017: Deterministic Output Content', () => {
   })
 
   test('multiple invocations should produce identical results', () => {
-    const runs = []
+    const runs: string[] = []
     for (let i = 0; i < 5; i++) {
       const options = {
         badgeUrl: generateBadgeUrl(testSummary, thresholds),

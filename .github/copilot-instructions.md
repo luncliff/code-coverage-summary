@@ -8,7 +8,8 @@ Auto-generated from all feature plans. Last updated: 2026-03-14
 - NO fake implementation, NO mocks, and NO stubs. The implementation must be real and complete.
 
 ## Active Technologies
-- TypeScript 5.x, targeting Node 20 + `@actions/core ^1.11.1`, `@actions/glob ^0.5.0`, `fast-xml-parser ^5.4.2`
+
+- TypeScript 6.x, targeting Node 20 + `@actions/core ^3.0.0`, `@actions/glob ^0.6.1`, `fast-xml-parser ^5.5.9`
 - filesystem reads for coverage inputs; optional output file written to workspace
 
 ## Project Structure
@@ -52,4 +53,4 @@ npm run build
 
 ## Code Style
 
-TypeScript 5.x, targeting Node 20+: Follow standard conventions
+TypeScript 6.x, targeting Node 20+: Follow standard conventions

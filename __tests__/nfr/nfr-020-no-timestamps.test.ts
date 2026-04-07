@@ -261,7 +261,7 @@ describe('NFR-020: No Timestamps', () => {
     const thresholds = { lower: 0.5, upper: 0.75 }
 
     // Run 10 times
-    const outputs = []
+    const outputs: string[] = []
     for (let i = 0; i < 10; i++) {
       const options = {
         badgeUrl: 'https://shields.io/badge/test',

@@ -32,12 +32,12 @@ jobs:
           github.com:443
 
     - name: Checkout
-      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       with:
         fetch-depth: 0
 
     - name: Setup .Net
-      uses: actions/setup-dotnet@4d4a70f4a5b2a5a5329f13be4ac933f2c9206ac0
+      uses: actions/setup-dotnet@9a946fdbd5fb07b82b2f5a4466058b876ab72bb2
       with:
         dotnet-version: 6.0.x
 
@@ -79,7 +79,7 @@ jobs:
             storage.googleapis.com:443
 
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
 
       - name: Install Cosign
         uses: sigstore/cosign-installer@9becc617647dfa20ae7b1151972e9b3a2c338a2b

@@ -16,7 +16,7 @@ jobs:
       contents: read
       pull-requests: read
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v7.0.0
         with:
           fetch-depth: 0
 
@@ -34,7 +34,7 @@ jobs:
         run: |
           npm run build
 
-      - uses: SonarSource/sonarqube-scan-action@v7.1.0
+      - uses: SonarSource/sonarqube-scan-action@v8.2.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -47,10 +47,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: ['20', '24']
+        node-version: ['24', '26']
       fail-fast: false
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v7.0.0
 
       - uses: actions/setup-node@v6
         with:

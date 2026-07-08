@@ -53,7 +53,7 @@ jobs:
       uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@cc7986c02bac29104a72998e67239bb5ee2ee110
+      uses: github/codeql-action/init@99df26d4f13ea111d4ec1a7dddef6063f76b97e9
       with:
         languages: ${{ matrix.language }}
         # queries: security-extended,security-and-quality # https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
